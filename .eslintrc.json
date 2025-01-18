@@ -1,0 +1,83 @@
+{
+    "env": {
+      "browser": true,
+      "es2021": true,
+      "node": true
+    },
+    "extends": [
+      "plugin:import/errors",
+      "plugin:import/warnings",
+      "eslint:recommended",
+      "plugin:react/recommended",
+      "plugin:react/jsx-runtime",
+      "plugin:react-hooks/recommended",
+      "plugin:import/recommended",
+      "prettier"
+    ],
+    "parserOptions": {
+      "ecmaFeatures": {
+        "jsx": true
+      },
+      "ecmaVersion": 2021,
+      "sourceType": "module"
+    },
+ "plugins": ["react", "react-refresh", "prettier", "import"],
+  "rules": {
+    "react-refresh/only-export-components": ["warn", { "allowConstantExport": true }],
+    "react/react-in-jsx-scope": "off",
+    "react/prop-types": "off",
+    "prettier/prettier": [
+      "error",
+      {
+        "endOfLine": "auto"
+      }
+    ],
+    "no-unused-vars": "warn",
+     "no-console": [
+      "warn",
+      {
+        "allow": ["warn", "error"]
+      }
+    ],
+   "import/namespace": "off",
+    "import/no-unresolved": "off",
+    "import/order": [
+      "warn",
+      {
+        "groups": [
+          ["builtin", "external"], // First group: Node built-in and external packages
+          ["internal"] // Second group: Internal imports (local components, utilities)
+        ],
+        "newlines-between": "always", // Ensure newline between groups
+        "alphabetize": {
+          // "order": "asc", // Alphabetically sort imports (optional)
+          "caseInsensitive": true
+        }
+      }
+    ],
+    // "quotes": ["warn", "double"],
+    "no-var": "error",
+    "no-trailing-spaces": "error",
+    "prefer-const": "warn",
+    // "arrow-body-style": ["error", "as-needed"],
+    "prefer-template": "error",
+    "no-undef": "warn",                // Disallows use of undeclared variables
+    "no-redeclare": "warn",           // Prevents redeclaring the same variable
+  "dot-notation": "warn",           // Enforces use of dot notation for property access
+    "no-multi-spaces": "warn",        // Disallows multiple spaces
+    "consistent-return": "warn",      // Requires consistent return values in functions
+    "array-callback-return": "warn",  // Ensures `return` in array method callbacks
+    "no-duplicate-imports": "warn",   // Disallows importing the same module multiple times
+  "max-len": ["warn", {             // Enforces a maximum line length
+      "code": 150,                      // Maximum characters per line
+      "ignoreComments": true,          // Ignores comments
+      "ignoreUrls": true               // Ignores long URLs
+    }]
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  }
+}
+ 
