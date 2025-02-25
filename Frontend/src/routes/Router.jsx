@@ -1,22 +1,3 @@
-<<<<<<< HEAD
-import { Suspense, lazy, useEffect } from "react"
-
-import routesConfig from "./routesConfig"
-import ProtectedRoute from "./ProtectedRoute"
-import LoadingComponent from "../components/LoadingComponent/LoadingComponent";
-
-
-const MainLayout = lazy(() => import("../layouts/MainLayout"));
-
-
-const Router = () => {
-  return (
-    <div>Router</div>
-  )
-}
-
-export default Router
-=======
 import { Suspense, lazy, useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 
@@ -50,4 +31,3 @@ const Router = () => {
 };
 
 export default Router;
->>>>>>> 949113b4a9ba1c3cac5b353afe6f7b9a3153db41
