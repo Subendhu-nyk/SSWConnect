@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React from "react";
 //import { EduTrack } from "../../assets/EduTrack-logo.png";
 import logo from "../../assets/EduTrack-logo.png";
@@ -43,3 +44,14 @@ const Header = () => {
 };
 
 export default Header;
+=======
+import React from 'react'
+
+const Header = () => {
+  return (
+    <div>Header</div>
+  )
+}
+
+export default Header
+>>>>>>> 949113b4a9ba1c3cac5b353afe6f7b9a3153db41
