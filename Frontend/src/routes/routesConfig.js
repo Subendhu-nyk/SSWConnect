@@ -9,6 +9,8 @@ const Home = lazy( () =>{
     // import ( './Home')
 })
 
+
+
 //add all import components here
 
 // create route config here
