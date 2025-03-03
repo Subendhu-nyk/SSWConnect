@@ -46,7 +46,10 @@
       {
         "groups": [
           ["builtin", "external"], // First group: Node built-in and external packages
-          ["internal"] // Second group: Internal imports (local components, utilities)
+          "internal",
+          "parent",
+          "sibling",
+          "index" // Second group: Internal imports (local components, utilities)
         ],
         "newlines-between": "always", // Ensure newline between groups
         "alphabetize": {
@@ -69,7 +72,7 @@
     "array-callback-return": "warn",  // Ensures `return` in array method callbacks
     "no-duplicate-imports": "warn",   // Disallows importing the same module multiple times
   "max-len": ["warn", {             // Enforces a maximum line length
-      "code": 150,                      // Maximum characters per line
+      "code": 3000,                      // Maximum characters per line
       "ignoreComments": true,          // Ignores comments
       "ignoreUrls": true               // Ignores long URLs
     }]
