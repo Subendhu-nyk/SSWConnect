@@ -5,7 +5,7 @@ import { persistReducer } from 'redux-persist'; // Import persistReducer
 import storage from 'redux-persist/lib/storage'; // LocalStorage as the storage mechanism
 
 // Import individual reducers (from slices)
-// import ThemeReducer from '../features/SystemConfigurationReducers/ThemeReducer/themeSlice';
+import ThemeReducer from '../features/ThemeReducer/themeSlice.js';
 // import DashboardReducer from '../features/DashboardSlice/DashboardSlice';
 // import TokenReducer from '../features/SystemConfigurationReducers/TokenReducer/tokenSlice';
 
@@ -22,7 +22,7 @@ const persistConfig = {
 
 // Combine multiple reducers 
 const rootReducer = combineReducers({
-//   theme: ThemeReducer,
+  theme: ThemeReducer,
 //   dashboard: DashboardReducer,
 //   token: TokenReducer,
 
