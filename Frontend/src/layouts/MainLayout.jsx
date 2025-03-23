@@ -2,13 +2,16 @@ import { Box, CssBaseline, Toolbar } from '@mui/material';
 import { Outlet } from 'react-router-dom';
 import { Suspense } from 'react';
 import LoadingComponent from '../components/LoadingComponent/LoadingComponent';
+import Header from '../components/Header/Header';
 
 const MainLayout = () => {
   return (
     <Box sx={{ display: 'flex', height: '100vh' }}>
       <CssBaseline />
       {/* Full-width Header */}
-      <Toolbar>HeaderView</Toolbar>
+      <Toolbar>
+        <Header />
+      </Toolbar>
       {/* Sidebar */}
       SidebarView
       {/* Main Content Area */}
