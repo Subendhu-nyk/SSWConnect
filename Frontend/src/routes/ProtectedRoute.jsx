@@ -2,7 +2,7 @@ const ProtectedRoute = ({ component: Component, requiredPermission }) => {
   const subMenus = [
     {
       Dashboard: ['Dashboard'],
-      Home: ['Home'],
+      // Home: ['Home'],
     },
   ];
   // check if the user has any of the required permissions

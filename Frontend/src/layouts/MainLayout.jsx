@@ -1,6 +1,8 @@
 import { Box, CssBaseline, Toolbar } from '@mui/material';
 import { Outlet } from 'react-router-dom';
 import { Suspense } from 'react';
+import LoadingComponent from '../components/LoadingComponent/LoadingComponent';
+import Header from '../components/Header/Header';
 
 const MainLayout = () => {
   return (
@@ -8,9 +10,8 @@ const MainLayout = () => {
       <CssBaseline />
       {/* Full-width Header */}
       <Toolbar>
-        HeaderView
+        <Header />
       </Toolbar>
-
       {/* Sidebar */}
       SidebarView
       {/* Main Content Area */}
@@ -21,12 +22,12 @@ const MainLayout = () => {
           bgcolor: 'background.paper',
           p: 3,
           pl: 8,
-          mt: 8, 
+          mt: 8,
           overflowY: 'auto',
         }}
       >
         {/* Add LoadingComponent */}
-        <Suspense fallback={LoadingComponent }>  
+        <Suspense fallback={LoadingComponent}>
           <Outlet />
         </Suspense>
       </Box>

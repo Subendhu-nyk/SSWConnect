@@ -1,4 +1,4 @@
-import { Suspense, lazy, useEffect } from 'react';
+import { Suspense, lazy } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 
 import routesConfig from './routesConfig';
@@ -13,7 +13,7 @@ const Router = () => {
       <Routes>
         <Route path='/' element={<MainLayout />}>
           {/* Map through the routesConfig to add the protected routes */}
-          {routesConfig.map(({ path, component: Component, requiredPermission }) => (
+          {routesConfig.map(({ path, component: Component, requiredPermission }) => (           
             <Route
               key={path}
               path={path}
