@@ -1,0 +1,34 @@
+/* Side Nav CSS */
+
+.drawerPaper::-webkit-scrollbar {
+  display: none;
+}
+
+.sideNavbar .MuiDrawer-paper {
+  width: 90px;
+  padding: 0 5px;
+  margin-top: 64px;
+}
+
+.drawerBase {
+  position: fixed;
+  z-index: 1001;
+  height: 100%;
+}
+
+.sideNavItem {
+  margin: 0.1rem 0rem;
+  flex-direction: column !important;
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+}
+
+.sideNavButton {
+  margin: 0 0 0.1rem 0 !important;
+  display: flex !important;
+}
+
+.sideNavButton:hover {
+  background-color: rgba(0, 0, 0, 0.04) !important;
+  border-radius: 8px !important;
+}

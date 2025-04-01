@@ -1,3 +1,3 @@
-const destination_Admin = import.meta.env.VITE_DESTINATION_ADMIN;
+// const destination_Admin = import.meta.env.VITE_DESTINATION_ADMIN;
 
-export {destination_Admin}; 
+// export {destination_Admin}; 
