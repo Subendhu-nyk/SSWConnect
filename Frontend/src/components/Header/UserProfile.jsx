@@ -5,14 +5,14 @@ import BadgeIcon from '@mui/icons-material/Badge';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import { LogoutOutlined } from '@mui/icons-material';
 import { Box } from '@mui/system';
+import { logout } from '../../features/AuthReducer/authSlice';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
-const UserProfile = ({
-  anchorEl = false,
-  userData = {},
-  handleClose = () => {},
-  onLogout = () => {},
-}) => {
+const UserProfile = ({ anchorEl = false, userData = {}, handleClose = () => {} }) => {
   const open = Boolean(anchorEl);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const userDetails = [
     {
       label: 'Username',
@@ -30,6 +30,12 @@ const UserProfile = ({
       value: userData?.role || 'Student',
     },
   ];
+  const onLogout = () => {
+    dispatch(logout()); // 🧹 Clear Redux
+    localStorage.removeItem('token'); // (Already handled in slice, but double-safe here)
+    navigate('/auth'); // 🔁 Send to login page
+  };
+
   return (
     <Box>
       {userData && (
@@ -47,7 +53,7 @@ const UserProfile = ({
               height: '300px',
               width: '320px',
               borderRadius: '10px',
-              boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',              
+              boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
             },
           }}
         >
@@ -55,11 +61,11 @@ const UserProfile = ({
             <Box
               sx={{
                 backgroundColor: 'background.profile',
-                padding: '1rem',               
+                padding: '1rem',
                 textAlign: 'center',
                 display: 'flex',
                 flexDirection: 'column',
-                alignItems: 'center',               
+                alignItems: 'center',
               }}
             >
               <Avatar
@@ -82,7 +88,7 @@ const UserProfile = ({
               <Typography variant='subheading'>{userData?.emailId}</Typography>
             </Box>
 
-            <Box p={2} sx={{ marginLeft: '20px'}}>
+            <Box p={2} sx={{ marginLeft: '20px' }}>
               <Grid container spacing={1}>
                 {userDetails.map((detail, index) => (
                   <React.Fragment key={index}>
@@ -138,12 +144,11 @@ const UserProfile = ({
                   <LogoutOutlined sx={{ marginRight: '8px' }} />
                   Logout
                 </Button>
-              </Box>          
-             
+              </Box>
             </Box>
           </Stack>
         </Popover>
-      )}      
+      )}
     </Box>
   );
 };
