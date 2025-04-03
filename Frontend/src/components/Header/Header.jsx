@@ -21,6 +21,7 @@ import UserProfile from './UserProfile';
 import { toggleTheme } from '../../features/ThemeReducer/themeSlice';
 import NotificationBar from '../NotificationBar/NotificationBar';
 import ApplicationSettings from './ApplicationSettings';
+import { capitalizeWords } from '../../utils/commonFunction/commonFunction';
 
 // Custom styled switch defined within the component
 const MaterialUISwitch = styled(Switch)(({ theme }) => ({
@@ -81,6 +82,7 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
 
 const Header = () => {
   const theme = useSelector(state => state.theme);
+  const { user } = useSelector(state => state.auth);
   const dispatch = useDispatch();
   // const navigate = useNavigate();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -168,7 +170,7 @@ const Header = () => {
           >
             <Typography variant='h6' sx={{ whiteSpace: 'nowrap' }}>
               Welcome, {'SAM'}{' '}
-              <span style={{ color: theme.darkMode ? '#fff' : 'blue' }}>({'Admin'})</span>
+              <span style={{ color: theme.darkMode ? '#fff' : 'blue' }}>({capitalizeWords(user.role)})</span>
             </Typography>
             <Tooltip
               sx={{ marginLeft: '1px !important', marginRight: '1px !important' }}

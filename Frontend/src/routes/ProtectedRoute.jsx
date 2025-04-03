@@ -1,17 +1,26 @@
-const ProtectedRoute = ({ component: Component, requiredPermission }) => {
-  const subMenus = [
-    {
-      Dashboard: ['Dashboard'],
-      // Home: ['Home'],
-    },
-  ];
-  // check if the user has any of the required permissions
-  const hasPermission = Array.isArray(requiredPermission)
-    ? requiredPermission.some(permission => Object.keys(subMenus[0]).includes(permission))
-    : Object.keys(subMenus[0]).includes(requiredPermission);
-  // Array.isArray - checks whether requiredPermission is array or not
+import { useSelector } from 'react-redux';
+import { Navigate } from 'react-router-dom';
 
-  return hasPermission ? <Component /> : 'No permission - component';
+const ProtectedRoute = ({ component: Component, requiredRole, requiredPermission }) => {
+  const { isAuthenticated, user, permissions } = useSelector(state => state.auth);
+
+  // Redirect to login if not logged in
+  if (!isAuthenticated) {
+    return <Navigate to='/auth' replace />;
+  }
+
+  //  If route has a required role (e.g. admin-dashboard)
+  if (requiredRole && user?.role !== requiredRole) {
+    return <div>🚫 Access Denied: You do not have the required role to view this page.</div>;
+  }
+
+  //  If route has required permission (e.g. users, courses)
+  if (requiredPermission && !permissions.includes(requiredPermission)) {
+    return <div>🚫 Access Denied: You do not have permission to access this resource.</div>;
+  }
+
+  // Access granted
+  return <Component />;
 };
 
 export default ProtectedRoute;
