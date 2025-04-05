@@ -26,6 +26,7 @@ import { styled } from '@mui/material/styles';
 import { logout, setTokenFromStorage } from '../../features/AuthReducer/authSlice';
 import { fetchRolePermissions } from '../../features/AuthReducer/authThunk';
 import backgroundImage from '../../../public/cse3.jpg'; // Update to your image path
+import UserNotFoundScreen from '../../components/Screen/UserNotFoundScreen';
 
 const BackgroundContainer = styled(Box)({
   position: 'relative',
@@ -61,18 +62,6 @@ const LoginCard = styled(Box)({
   textAlign: 'center',
 });
 
-const StyledButton = styled(Button)({
-  background: '#3b30c8',
-  color: '#fff',
-  fontWeight: 'bold',
-  fontSize: '1rem',
-  borderRadius: '8px',
-  margin: '10px 0px',
-  '&:hover': {
-    backgroundColor: '#756ed8',
-  },
-});
-
 const AuthForm = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -82,6 +71,7 @@ const AuthForm = () => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showLogoutMsg, setShowLogoutMsg] = useState(false);
+  const [isValidUser,setIsValidUser]=useState(false)
 
   const { isAuthenticated } = useSelector(state => state.auth);
 
@@ -103,8 +93,8 @@ const AuthForm = () => {
     const role = username.toLowerCase();
     const validRoles = ['admin', 'teacher', 'student', 'staff'];
 
-    if (!validRoles.includes(role)) {
-      alert('🚫 User not found. Please enter a valid username (admin, teacher, student, staff)');
+    if (!validRoles.includes(role)) {      
+      setIsValidUser(true)
       return;
     }
 
@@ -281,6 +271,7 @@ const AuthForm = () => {
       >
         Back to website
       </Button>
+      {isValidUser && <UserNotFoundScreen/>}
     </BackgroundContainer>
   );
 };
