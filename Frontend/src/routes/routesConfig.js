@@ -4,6 +4,7 @@ const AdminDashboard = lazy(() => import('../pages/Dashboard/Admin/AdminDashboar
 const StudentDashboard = lazy(() => import('../pages/Dashboard/Student/StudentDashboard'));
 const TeacherDashboard = lazy(() => import('../pages/Dashboard/Teacher/TeacherDashboard'));
 const StaffDashboard = lazy(() => import('../pages/Dashboard/Staff/StaffDashboard'));
+const AddDepartment = lazy(() => import('../pages/Department/AddDepartment'));
 
 const routesConfig = [
   {
@@ -25,6 +26,11 @@ const routesConfig = [
     path: '/staff-dashboard',
     component: StaffDashboard,
     requiredRole: 'staff',
+  },
+  {
+    path: 'add/departments',
+    component: AddDepartment,
+    requiredRole: ['admin','staff'],
   },
 ];
 

@@ -1,21 +1,20 @@
-import React from 'react';
 import { Box, CircularProgress, Typography } from '@mui/material';
 
 const LoadingComponent = () => {
   return (
     <Box
       sx={{
-        position: 'absolute',
+        position: 'fixed',
         top: 0,
         left: 0,
-        width: '100%',
-        height: '100%',
+        width: '100vw',
+        height: '100vh',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: 'rgba(255, 255, 255, 0.8)', // White with 80% opacity
-        backdropFilter: 'blur(4px)', // Backdrop blur
-        zIndex: 10,
+        backgroundColor: 'rgba(255, 255, 255, 0.8)',
+        backdropFilter: 'blur(4px)',
+        zIndex: 1301, // Higher than MUI's AppBar default
       }}
     >
       <Box sx={{ position: 'relative', textAlign: 'center' }}>

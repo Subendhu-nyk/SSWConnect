@@ -73,7 +73,7 @@ const ApplicationSettings = ({ open, onClose }) => {
                 },
               }}
             >
-              <CloseIcon onClick={onClose} />
+              <CloseIcon />
             </IconButton>
           </Box>
         </Box>
