@@ -9,9 +9,9 @@ import {
   Tooltip,
   Avatar,
   FormControlLabel,
-  Switch,
-  styled,
+  Switch,  
 } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import Badge from '@mui/material/Badge';
