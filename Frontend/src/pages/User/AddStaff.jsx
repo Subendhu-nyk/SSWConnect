@@ -20,8 +20,8 @@ import { accordionConfig } from '../../config/AccordionConfig/accordionConfig';
 import { generateInitialValues } from '../../config/generateInitialValues';
 // using Formik to handle all form state, validations, and submit logic in a controlled way.
 
-const AddDepartment = () => {
-  const formType = 'departmentForm';
+const AddStaff = () => {
+  const formType = 'staffForm';
   const config = accordionConfig[formType];
   //Loads the corresponding field sections for 'departmentForm'.
   const handleSubmit = (values, { resetForm }) => {
@@ -31,16 +31,11 @@ const AddDepartment = () => {
   };
 
   const initialValues = generateInitialValues(config);
-  // Input: accordion config object.
-  // Output:all blank strings initially.
   const validationSchema = generateValidationSchema(config);
-  // Input: same config.
-  // Output: Yup validation schema object like { departmentName: Yup.string().required(), ... }
 
   const renderAccordionContent = config => {
     return config.map(section => (
       <Grid item xs={12} key={section.sectionName}>
-        {/* Renders each form section in its own accordion */}
         <Accordion defaultExpanded>
           <AccordionSummary
             expandIcon={<ExpandMoreOutlined />}
@@ -52,13 +47,13 @@ const AddDepartment = () => {
             }}
           >
             <Typography variant='h6'>{section.sectionName}</Typography>
-            {/* 👆 "Basic Info" or "Manager Details", etc. */}
+            {/*"Basic Info" or "Manager Details", etc. */}
           </AccordionSummary>
           <AccordionDetails>
             <Grid container spacing={2}>
               {section.fields.map(field => (
                 <Grid item xs={12} sm={6} key={field.name}>
-                  {/* 🧾 Shows two fields per row on medium+ screens */}
+                  {/*  Shows two fields per row on medium+ screens */}
                   <CommonTextFields
                     type={field.type}
                     name={field.name}
@@ -67,6 +62,8 @@ const AddDepartment = () => {
                     required={field.required}
                     maxLength={field.maxLength ? parseInt(field.maxLength) : undefined}
                     options={field.options}
+                    multiple={field.multiple} // Pass multiple prop
+                    accept={field.accept} // Pass accept prop
                     onChange={value => console.log(`${field.name} changed:`, value)}
                     // 🔄 E.g. typing into "Department Name": logs -> "departmentName changed: HR"
                   />
@@ -97,7 +94,7 @@ const AddDepartment = () => {
         return (
           <Form>
             <Typography variant='h6' gutterBottom>
-              Add Department
+              Add Staff
             </Typography>
             <Grid container spacing={2}>
               {renderAccordionContent(config)}
@@ -123,4 +120,4 @@ const AddDepartment = () => {
   );
 };
 
-export default AddDepartment;
+export default AddStaff;
