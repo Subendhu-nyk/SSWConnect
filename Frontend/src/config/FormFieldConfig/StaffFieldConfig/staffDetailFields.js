@@ -180,7 +180,7 @@ export const StaffDetailFields = [
   },
   {
     type: 'attachment',
-    name: 'documents',
+    name: 'educationDocument',
     label: 'Supporting Education Document (PDFs)',
     placeholder: 'Upload Staff Photo',
     required: false,

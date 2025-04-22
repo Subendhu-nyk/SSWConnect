@@ -41,7 +41,7 @@ export const accordionConfig = {
     },
     {
       sectionName: 'Educational Details',
-      fields: extractFields(['education', 'documents']),
+      fields: extractFields(['education', 'educationDocument']),
     },
     {
       sectionName: 'Media',

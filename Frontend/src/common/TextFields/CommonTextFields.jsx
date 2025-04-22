@@ -792,7 +792,7 @@ const CommonTextFields = ({
                     </Typography>
                   )}
                 </FormControl>
-              );            
+              );
             }}
           </Field>
         );

@@ -7,6 +7,7 @@ import storage from 'redux-persist/lib/storage'; // LocalStorage as the storage 
 // Import individual reducers (from slices)
 import ThemeReducer from '../features/ThemeReducer/themeSlice.js';
 import AuthReducer from '../features/AuthReducer/authSlice.js'
+import userManagementReducer from '../features/UserManagement/userManagementSlice.js'
 // import DashboardReducer from '../features/DashboardSlice/DashboardSlice';
 // import TokenReducer from '../features/SystemConfigurationReducers/TokenReducer/tokenSlice';
 
@@ -25,6 +26,7 @@ const persistConfig = {
 const rootReducer = combineReducers({
   theme: ThemeReducer,
   auth:AuthReducer,
+  userManagement:userManagementReducer,
 //   dashboard: DashboardReducer,
 //   token: TokenReducer,
 

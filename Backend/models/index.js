@@ -18,6 +18,8 @@ db.User = require('./userProfile')(sequelize, Sequelize.DataTypes);
 db.StudentProfile = require('./studentProfile')(sequelize, Sequelize.DataTypes);
 db.TeacherProfile = require('./TeacherProfile')(sequelize, Sequelize.DataTypes);
 db.StaffProfile = require('./StaffProfile')(sequelize, Sequelize.DataTypes);
+db.UserDocuments = require('./userDocuments')(sequelize, Sequelize.DataTypes);
+
 
 // For academic structure
 // db.Department = require('./Department')(sequelize, Sequelize.DataTypes);

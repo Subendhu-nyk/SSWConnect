@@ -14,8 +14,9 @@ const isLocalhost = window.location.origin.includes('localhost');
 
 // Function to get dynamic headers
 const getDynamicParams = (params) => {
-  const { loginToken } = store.getState().token;
+  // const { loginToken } = store.getState().token;
 
+  const loginToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGV4YW1wbGUuY29tIiwidXNlcklkIjoiMTIzIiwicm9sZSI6ImFkbWluIn0.IqkI69DAOcHB3Z-bqNs7GsvaR02LBAgGAL051bvN89I'
   const headers = {
     'Content-Type': params instanceof FormData ? 'multipart/form-data' : 'application/json',
     'Access-Control-Allow-Origin': '*',
