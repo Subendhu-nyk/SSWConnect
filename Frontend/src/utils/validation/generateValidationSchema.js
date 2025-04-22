@@ -60,6 +60,24 @@ const generateValidationSchema = config => {
             // valid: "active" | invalid: empty string if required is true
             break;
 
+          case 'attachment':
+            if (field.multiple) {
+              schema = Yup.array().of(Yup.mixed());
+              if (field.required) {
+                schema = schema
+                  .min(1, `${field.name} must have at least one file`)
+                  .required(`${field.name} is required`);
+              }
+            } else {
+              schema = Yup.mixed().nullable();
+              if (field.required) {
+                schema = schema
+                  .required(`${field.name} is required`)
+                  .typeError(`${field.name} must be a file`);
+              }
+            }
+            break;
+
           default:
             schema = Yup.string();
             // for text/textarea fields, validate as string
@@ -77,6 +95,10 @@ const generateValidationSchema = config => {
           schema = schema.required(`${field.name} is required`);
           // apply required only if it's marked true in config
           //  invalid: empty input |  valid: any non-empty input
+        }
+
+        if (field.required && field.type !== 'attachment') {
+          schema = schema.required(`${field.name} is required`);
         }
 
         acc[field.name] = schema;
