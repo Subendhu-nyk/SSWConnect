@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { addStaffThunk } from './userManagementThunk';
+import { addUserThunk } from './userManagementThunk';
 
 const initialState = {
   addStaffData: null,
@@ -14,15 +14,15 @@ const userManagementSlice = createSlice({
   extraReducers: builder => {
     builder
       // updateSystemId
-      .addCase(addStaffThunk.pending, state => {
+      .addCase(addUserThunk.pending, state => {
         state.loading.addStaffLoading = true;
         state.error = null;
       })
-      .addCase(addStaffThunk.fulfilled, (state, action) => {
+      .addCase(addUserThunk.fulfilled, (state, action) => {
         state.loading.addStaffLoading = false;
         state.addStaffData = action.payload.data;
       })
-      .addCase(addStaffThunk.rejected, (state, action) => {
+      .addCase(addUserThunk.rejected, (state, action) => {
         state.loading.addStaffLoading = false;
         state.error = action.payload;
       });

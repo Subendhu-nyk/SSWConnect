@@ -1,8 +1,10 @@
 import { DepartmentDetailFields } from '../FormFieldConfig/DepartmentFieldConfig/departmentDetailFields';
-import { StaffDetailFields } from '../FormFieldConfig/StaffFieldConfig/staffDetailFields';
+import { StaffDetailFields } from '../FormFieldConfig/UserFieldConfig/staffDetailFields';
+import { StudentDetailFields } from '../FormFieldConfig/UserFieldConfig/studentDetailFields';
+import { TeacherDetailFields } from '../FormFieldConfig/UserFieldConfig/teacherDetailFields';
 
-const extractFields = fieldNames =>
-  StaffDetailFields.filter(field => fieldNames.includes(field.name));
+const extractFields = (detailFields, fieldNames) =>
+  detailFields.filter(field => fieldNames.includes(field.name));
 
 export const accordionConfig = {
   departmentForm: [
@@ -14,11 +16,16 @@ export const accordionConfig = {
   staffForm: [
     {
       sectionName: 'System Info',
-      fields: extractFields(['user_id', 'password', 'confirmpassword']),
+      fields: extractFields(StaffDetailFields, [
+        'user_id',
+        'password',
+        'confirmpassword',
+        'joiningDate',
+      ]),
     },
     {
       sectionName: 'Personal Details',
-      fields: extractFields([
+      fields: extractFields(StaffDetailFields, [
         'firstName',
         'lastName',
         'displayName',
@@ -29,23 +36,128 @@ export const accordionConfig = {
     },
     {
       sectionName: 'Contact Details',
-      fields: extractFields(['emailId', 'alternateEmailID', 'phoneNumber']),
+      fields: extractFields(StaffDetailFields, ['emailId', 'alternateEmailID', 'phoneNumber']),
     },
     {
       sectionName: 'Address Information',
-      fields: extractFields(['address', 'state', 'city', 'pinCode']),
+      fields: extractFields(StaffDetailFields, ['address', 'state', 'city', 'pinCode']),
     },
     {
       sectionName: 'Professional Details',
-      fields: extractFields(['department', 'roles', 'isActive', 'designation', 'experience']),
+      fields: extractFields(StaffDetailFields, [
+        'department',
+        'roles',
+        'isActive',
+        'designation',
+        'experience',
+        'certificationDocument',
+      ]),
     },
     {
       sectionName: 'Educational Details',
-      fields: extractFields(['education', 'educationDocument']),
+      fields: extractFields(StaffDetailFields, ['education', 'educationDocument']),
     },
     {
       sectionName: 'Media',
-      fields: extractFields(['uploadPhoto']),
+      fields: extractFields(StaffDetailFields, ['uploadPhoto']),
+    },
+  ],
+  studentForm: [
+    {
+      sectionName: 'System Info',
+      fields: extractFields(StudentDetailFields, [
+        'user_id',
+        'password',
+        'confirmpassword',
+        'registrationDate',
+      ]),
+    },
+    {
+      sectionName: 'Personal Details',
+      fields: extractFields(StudentDetailFields, [
+        'firstName',
+        'lastName',
+        'displayName',
+        'dob',
+        'gender',
+        'fatherName',
+        'bloodGroup',
+      ]),
+    },
+    {
+      sectionName: 'Contact Details',
+      fields: extractFields(StudentDetailFields, [
+        'emailId',
+        'alternateEmailID',
+        'phoneNumber',
+        'fatherMobileNumber',
+      ]),
+    },
+    {
+      sectionName: 'Address Information',
+      fields: extractFields(StudentDetailFields, ['address', 'state', 'city', 'pinCode']),
+    },
+    {
+      sectionName: 'Professional Details',
+      fields: extractFields(StudentDetailFields, ['department', 'roles', 'isActive']),
+    },
+    {
+      sectionName: 'Educational Details',
+      fields: extractFields(StudentDetailFields, ['education', 'educationDocument']),
+    },
+    {
+      sectionName: 'Media',
+      fields: extractFields(StudentDetailFields, ['uploadPhoto']),
+    },
+  ],
+  teacherForm: [
+    {
+      sectionName: 'System Info',
+      fields: extractFields(TeacherDetailFields, [
+        'user_id',
+        'password',
+        'confirmpassword',
+        'joiningDate',
+      ]),
+    },
+    {
+      sectionName: 'Personal Details',
+      fields: extractFields(TeacherDetailFields, [
+        'firstName',
+        'lastName',
+        'displayName',
+        'dob',
+        'gender',
+        'bloodGroup',
+      ]),
+    },
+    {
+      sectionName: 'Contact Details',
+      fields: extractFields(TeacherDetailFields, ['emailId', 'alternateEmailID', 'phoneNumber']),
+    },
+    {
+      sectionName: 'Address Information',
+      fields: extractFields(TeacherDetailFields, ['address', 'state', 'city', 'pinCode']),
+    },
+    {
+      sectionName: 'Professional Details',
+      fields: extractFields(TeacherDetailFields, [
+        'department',
+        'roles',
+        'isActive',
+        'designation',
+        'experience',
+        'certificationDocument',
+        'experienceDocument',
+      ]),
+    },
+    {
+      sectionName: 'Educational Details',
+      fields: extractFields(TeacherDetailFields, ['education', 'educationDocument']),
+    },
+    {
+      sectionName: 'Media',
+      fields: extractFields(TeacherDetailFields, ['uploadPhoto']),
     },
   ],
 };

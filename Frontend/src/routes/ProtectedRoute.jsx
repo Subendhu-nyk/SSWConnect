@@ -10,7 +10,7 @@ const ProtectedRoute = ({ component: Component, requiredRole, requiredPermission
   }
 
   //  If route has a required role (e.g. admin-dashboard)
-  if (requiredRole && !requiredRole.includes(user?.role)) {   
+  if (requiredRole && !requiredRole.includes(user?.role)) {
     return <div>🚫 Access Denied: You do not have the required role to view this page.</div>;
   }
 

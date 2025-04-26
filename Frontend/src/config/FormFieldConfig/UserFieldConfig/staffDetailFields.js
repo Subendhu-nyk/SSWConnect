@@ -8,6 +8,13 @@ export const StaffDetailFields = [
     maxLength: '30',
   },
   {
+    type: 'date',
+    name: 'joiningDate',
+    label: 'Joining Date',
+    placeholder: 'Select Joining Date',
+    required: true,
+  },
+  {
     type: 'text',
     name: 'firstName',
     label: 'First Name',
@@ -182,7 +189,7 @@ export const StaffDetailFields = [
     type: 'attachment',
     name: 'educationDocument',
     label: 'Supporting Education Document (PDFs)',
-    placeholder: 'Upload Staff Photo',
+    placeholder: 'Upload Supporting Education Document',
     required: false,
     multiple: true,
     accept: 'application/pdf',
@@ -195,6 +202,15 @@ export const StaffDetailFields = [
     required: false,
     maxLength: '100',
   },
+  {
+    type: 'attachment',
+    name: 'certificationDocument',
+    label: 'Supporting Certification Documents (PDFs)',
+    placeholder: 'Upload Supporting Certification Documents',
+    required: false,
+    multiple: true,
+    accept: 'application/pdf',
+  }, 
   {
     type: 'text',
     name: 'designation',

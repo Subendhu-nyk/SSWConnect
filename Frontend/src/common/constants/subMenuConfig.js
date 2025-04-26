@@ -1,4 +1,4 @@
-export const subMenuConfig = [  
+export const subMenuConfig = [
   {
     id: 'students',
     label: 'All Students',
@@ -8,7 +8,7 @@ export const subMenuConfig = [
   {
     id: 'students',
     label: 'Add Student',
-    path: 'add/students',
+    path: 'add/student',
     requiredRole: ['admin', 'staff'],
   },
   {
@@ -28,24 +28,24 @@ export const subMenuConfig = [
     label: 'Student Attendance',
     path: 'attendance/students',
     requiredRole: ['admin', 'teacher', 'staff'],
-  }, 
+  },
   {
     id: 'teachers',
     label: 'All Teachers',
     path: 'all/teachers',
-    requiredRole: ['admin','staff'],
+    requiredRole: ['admin', 'staff'],
   },
   {
     id: 'teachers',
     label: 'Add Teacher',
-    path: 'add/teachers',
-    requiredRole: ['admin','staff'],
+    path: 'add/teacher',
+    requiredRole: ['admin', 'staff'],
   },
   {
     id: 'teachers',
     label: 'Edit Teacher',
     path: 'edit/teachers',
-    requiredRole: ['admin','staff'],
+    requiredRole: ['admin', 'staff'],
   },
   {
     id: 'teachers',
@@ -87,25 +87,25 @@ export const subMenuConfig = [
     id: 'classes',
     label: 'Add Class',
     path: 'add/classes',
-    requiredRole: ['admin','staff'],
+    requiredRole: ['admin', 'staff'],
   },
   {
     id: 'classes',
     label: 'Edit Class',
     path: 'edit/classes',
-    requiredRole: ['admin','staff'],
-  },  
+    requiredRole: ['admin', 'staff'],
+  },
   {
     id: 'timetable',
     label: 'Add Timetable',
     path: 'add/timetable',
-    requiredRole: ['admin','staff'],
+    requiredRole: ['admin', 'staff'],
   },
   {
     id: 'timetable',
     label: 'Edit Timetable',
     path: 'edit/timetable',
-    requiredRole: ['admin','staff'],
+    requiredRole: ['admin', 'staff'],
   },
   {
     id: 'timetable',
@@ -118,19 +118,19 @@ export const subMenuConfig = [
     label: 'All Courses',
     path: 'all/courses',
     requiredRole: ['admin', 'teacher', 'staff', 'student'],
-  },  
+  },
   {
     id: 'courses',
     label: 'Add Course',
     path: 'add/courses',
-    requiredRole: ['admin','staff'],
+    requiredRole: ['admin', 'staff'],
   },
   {
     id: 'courses',
     label: 'Edit Course',
     path: 'edit/courses',
-    requiredRole: ['admin','staff'],
-  }, 
+    requiredRole: ['admin', 'staff'],
+  },
   {
     id: 'syllabus',
     label: 'View Syllabus',
@@ -141,14 +141,14 @@ export const subMenuConfig = [
     id: 'syllabus',
     label: 'Add Syllabus',
     path: 'add/syllabus',
-    requiredRole: ['admin','staff'],
+    requiredRole: ['admin', 'staff'],
   },
   {
     id: 'syllabus',
     label: 'Edit Syllabus',
     path: 'edit/syllabus',
-    requiredRole: ['admin','staff'],
-  },  
+    requiredRole: ['admin', 'staff'],
+  },
   {
     id: 'fees',
     label: 'Add Fees Record',
@@ -178,7 +178,7 @@ export const subMenuConfig = [
     label: 'All Books',
     path: 'all/library',
     requiredRole: ['admin', 'teacher', 'staff', 'student'],
-  }, 
+  },
   {
     id: 'library',
     label: 'Add New Book',
@@ -219,19 +219,19 @@ export const subMenuConfig = [
     id: 'departments',
     label: 'Add Department',
     path: 'add/departments',
-    requiredRole: ['admin','staff'],
+    requiredRole: ['admin', 'staff'],
   },
   {
     id: 'departments',
     label: 'Edit Department',
     path: 'edit/departments',
-    requiredRole: ['admin','staff'],
+    requiredRole: ['admin', 'staff'],
   },
   {
     id: 'designation',
     label: 'All Designations',
     path: 'all/designations',
-    requiredRole: ['admin', 'staff','teacher'],
+    requiredRole: ['admin', 'staff', 'teacher'],
   },
   {
     id: 'designation',
@@ -250,7 +250,7 @@ export const subMenuConfig = [
     label: 'All Attendance Records',
     path: 'all/attendance',
     requiredRole: ['admin', 'teacher', 'staff'],
-  }, 
+  },
   {
     id: 'attendance',
     label: 'Edit Attendance',
@@ -369,7 +369,7 @@ export const subMenuConfig = [
     id: 'feedback',
     label: 'All Feedback',
     path: 'all/feedback',
-    requiredRole: ['admin','student'],
+    requiredRole: ['admin', 'student'],
   },
   {
     id: 'notice-board',
@@ -423,13 +423,13 @@ export const subMenuConfig = [
     id: 'student-report',
     label: 'Student Report',
     path: 'report/student',
-    requiredRole: ['admin','student','teacher'],
+    requiredRole: ['admin', 'student', 'teacher'],
   },
   {
     id: 'grade-report',
     label: 'Grade Report',
     path: 'report/grade',
-    requiredRole: ['admin','student','teacher'],
+    requiredRole: ['admin', 'student', 'teacher'],
   },
   {
     id: 'leave-report',
@@ -442,5 +442,5 @@ export const subMenuConfig = [
     label: 'Fees Report',
     path: 'report/fees',
     requiredRole: ['admin', 'staff'],
-  }
+  },
 ];

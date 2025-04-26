@@ -14,7 +14,7 @@ const Router = () => {
   const { isAuthenticated, user } = useSelector(state => state.auth);
 
   return (
-    <Suspense fallback={<LoadingComponent/>}>
+    <Suspense fallback={<LoadingComponent />}>
       <Routes>
         {/* Public Route */}
         <Route path='/auth' element={<AuthForm />} />
