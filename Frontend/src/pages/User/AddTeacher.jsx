@@ -14,13 +14,13 @@ import CommonTextFields from '../../common/TextFields/CommonTextFields';
 import generateValidationSchema from '../../utils/validation/generateValidationSchema';
 import { accordionConfig } from '../../config/AccordionConfig/accordionConfig';
 import { generateInitialValues } from '../../config/generateInitialValues';
-// import { useDispatch, useSelector } from 'react-redux';
-// import { addUserThunk } from '../../features/UserManagement/userManagementThunk';
+import { useDispatch, useSelector } from 'react-redux';
+import { addUserThunk } from '../../features/UserManagement/userManagementThunk';
 
 const AddTeacher = () => {
   const formType = 'teacherForm';
   const config = accordionConfig[formType];
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
   // const userData = useSelector(state => state);
 
   const handleSubmit = async (values, { resetForm }) => {
@@ -50,11 +50,11 @@ const AddTeacher = () => {
       }
 
       // Dispatch addStaffThunk with FormData and headers
-      // const result = await dispatch(
-      //   addUserThunk({
-      //     payload: formData, // Changed from 'data' to 'payload' to match createApiThunk
-      //   })
-      // );
+      const result = await dispatch(
+        addUserThunk({
+          payload: formData, // Changed from 'data' to 'payload' to match createApiThunk
+        })
+      );
 
       resetForm();
     } catch (error) {
