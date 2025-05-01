@@ -12,7 +12,6 @@ const MainLayout = lazy(() => import('../layouts/MainLayout'));
 
 const Router = () => {
   const { isAuthenticated, user } = useSelector(state => state.auth);
-
   return (
     <Suspense fallback={<LoadingComponent />}>
       <Routes>

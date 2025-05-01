@@ -8,6 +8,9 @@ const authenticatemiddleware = require("../middleware/auth");
 // Import the controller that handles logic for adding staff
 const userController = require("../controllers/userController");
 
+
+router.post("/auth/login", userController.userLogin);
+
 //Route to add a staff member
 router.post(
   "/add/staff",
@@ -25,8 +28,6 @@ router.post(
   // After files are parsed, control goes to the controller
   userController.addUser
 );
-
-router.post("/auth/login", userController.userLogin);
 
 router.get(
   "/download/:userId/:filename",

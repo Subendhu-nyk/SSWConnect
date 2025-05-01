@@ -26,8 +26,6 @@ const AddStaff = () => {
   const formType = 'staffForm';
   const config = accordionConfig[formType];
   const dispatch = useDispatch();
-  const userData = useSelector(state => state);
-  console.log('userData>>', userData);
   //Loads the corresponding field sections for 'departmentForm'.
   // const handleSubmit = async (values, { resetForm }) => {
   //   // dispatch(addStaffThunk({payload:'formData'}))
@@ -115,8 +113,7 @@ const AddStaff = () => {
       );
 
       // On success, reset form and show success message
-      resetForm();
-      console.log('Staff created:', result);
+      resetForm();     
     } catch (error) {
       // Handle errors and display in form
       console.error('Error creating staff:', error);

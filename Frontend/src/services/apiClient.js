@@ -4,32 +4,23 @@ import urlMap from '../config/applicationConfig';
 
 const isLocalhost = window.location.origin.includes('localhost');
 
-// Define backend URL mappings here or shift it to applicationConfig
-// const urlMap = {
-//   signup: 'http://localhost:8800/api/signup',
-//   login: 'http://localhost:8800/api/login',
-//   users: 'http://localhost:8800/api/users',
-//   // Add other mappings as needed
-// };
-
-// Function to get dynamic headers
+// Get headers including token from Redux
 const getDynamicParams = params => {
-  // const { loginToken } = store.getState().token;
+  const { token: loginToken } = store.getState().auth;
 
-  const loginToken =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGV4YW1wbGUuY29tIiwidXNlcklkIjoiMTIzIiwicm9sZSI6ImFkbWluIn0.IqkI69DAOcHB3Z-bqNs7GsvaR02LBAgGAL051bvN89I';
   const headers = {
     'Content-Type': params instanceof FormData ? 'multipart/form-data' : 'application/json',
     'Access-Control-Allow-Origin': '*',
-    Authorization: `Bearer ${loginToken}`, // Use Redux token
   };
+
+  if (loginToken) {
+    headers['Authorization'] = `Bearer ${loginToken}`;
+  }
 
   return { headers };
 };
 
-// Function to get dynamic URL
-// If isLocalhost, it replaces API calls with urlMap from config.js.
-// If an endpoint is not mapped, it returns the original endpoint.
+// Resolve URL via config for localhost testing
 const getDynamicUrl = endpoint => {
   if (isLocalhost) {
     return urlMap[endpoint] || endpoint;
@@ -37,10 +28,9 @@ const getDynamicUrl = endpoint => {
   return endpoint;
 };
 
-// Axios instance
+// Main Axios client
 const apiClient = axios.create();
 
-// Main API request function
 const apiRequest = async (method, endpoint, params = null, data = null) => {
   try {
     const URL = getDynamicUrl(endpoint);

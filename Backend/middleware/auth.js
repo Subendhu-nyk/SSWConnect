@@ -1,25 +1,26 @@
-const jwt=require('jsonwebtoken')
-const User=require('../models/userProfile');
+const jwt = require('jsonwebtoken');
+const User = require('../models/userProfile');
 
-const authenticate=(req,res,next)=>{
-    try{
-        const token=req.header('Authorization')       
-        const user=jwt.verify(token,'98sh856ru454t45izklk');        
-        console.log('userID >>>> ',user.user_id)
-        User.findByPk(user.user_id).then(user=>{
-            console.log("user>>",user)
-            console.log(JSON.stringify(user));
-            req.user=user;            
-             next();
-        }).catch(err =>{ throw new Error(err)})        
-        
+const authenticate = async (req, res, next) => {
+  try {
+    const token = req.header('Authorization')?.replace('Bearer ', '');
+    if (!token) {
+      return res.status(401).json({ success: false, message: 'Access denied. No token provided.' });
     }
-    catch(err){
-        console.log("error"+err)
-        return res.status(401).json({success:fail})
-    }
-}
 
-module.exports={
-    authenticate:authenticate
-}
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findByPk(decoded.userId);
+
+    if (!user) {
+      return res.status(401).json({ success: false, message: 'Invalid token.' });
+    }
+
+    req.user = user;
+    next();
+  } catch (err) {
+    console.error('Authentication error:', err);
+    res.status(401).json({ success: false, message: 'Invalid token.' });
+  }
+};
+
+module.exports = { authenticate };
