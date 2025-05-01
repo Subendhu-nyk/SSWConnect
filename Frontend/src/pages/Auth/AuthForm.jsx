@@ -1,7 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-
 import {
   Box,
   Grid,
@@ -14,7 +13,6 @@ import {
   IconButton,
   Divider,
   InputAdornment,
-  Alert,
 } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import VpnKeyIcon from '@mui/icons-material/VpnKey';
@@ -23,6 +21,9 @@ import SendIcon from '@mui/icons-material/Send';
 import { styled } from '@mui/material/styles';
 
 import { authenticateUserThunk } from '../../features/AuthReducer/authThunk';
+import useToast from '../../hooks/useToast';
+import LoadingComponent from '../../components/LoadingComponent/LoadingComponent';
+
 import backgroundImage from '/cse3.jpg';
 
 const BackgroundContainer = styled(Box)({
@@ -62,12 +63,12 @@ const LoginCard = styled(Box)({
 const AuthForm = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  const { showToast } = useToast();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
-  const { isAuthenticated, loading, error, token, user } = useSelector(state => state.auth);
+  const { loading } = useSelector(state => state.auth);
 
   const handleLogin = async () => {
     const loginPayload = {
@@ -80,17 +81,19 @@ const AuthForm = () => {
       loginPayload.user_id = username;
     }
 
-    try {     
+    try {
       await dispatch(authenticateUserThunk({ payload: loginPayload })).unwrap();
       navigate('/'); // Let router handle role-based redirect
     } catch (err) {
-      console.error('[Login Error]', err);
+      showToast('error', `${err} Please try again.`);
+      navigate('/auth');
     }
   };
 
   return (
     <BackgroundContainer>
       <Overlay />
+      {loading.login && <LoadingComponent />}
       <LoginCard>
         <Box display='flex' flexDirection='column' alignItems='center' mb={3}>
           <Box
@@ -105,8 +108,8 @@ const AuthForm = () => {
             Welcome to SSWConnect
           </Typography>
           <Typography variant='body2' sx={{ mt: 1, color: '#333', textAlign: 'center' }}>
-            Access your personalized dashboard to connect, analyze reports, track attendance,
-            view events, and more.
+            Access your personalized dashboard to connect, analyze reports, track attendance, view
+            events, and more.
           </Typography>
         </Box>
 
@@ -180,12 +183,6 @@ const AuthForm = () => {
           >
             {loading.login ? 'Logging in...' : 'Login'}
           </Button>
-
-          {error && (
-            <Alert severity='error' sx={{ mt: 1 }}>
-              {error}
-            </Alert>
-          )}
 
           <Typography variant='body2'>
             Don’t have an account?{' '}

@@ -15,14 +15,14 @@ if (tokenFromStorage) {
 }
 
 const initialState = {
-  token: tokenFromStorage || null,
+  token: tokenFromStorage || '',
   user: decodedUser || null,
   isAuthenticated: !!tokenFromStorage,
   permissions: [],
   loading: {
     login: false,
   },
-  error: null,
+  error: '',
 };
 
 const authSlice = createSlice({
