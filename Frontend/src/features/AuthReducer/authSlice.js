@@ -8,6 +8,7 @@ let decodedUser = null;
 if (tokenFromStorage) {
   try {
     decodedUser = jwtDecode(tokenFromStorage);
+    decodedUser.role = decodedUser.role.toLowerCase();
   } catch (e) {
     console.error('Invalid stored token:', e);
   }
