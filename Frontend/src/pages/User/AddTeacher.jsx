@@ -1,3 +1,4 @@
+import { Form, Formik } from 'formik';
 import {
   Button,
   Grid,
@@ -6,104 +7,47 @@ import {
   AccordionSummary,
   AccordionDetails,
 } from '@mui/material';
-// imported MUI components to structure the layout, show labels, and create form buttons.
-
 import { ExpandMoreOutlined } from '@mui/icons-material';
 
 import CommonTextFields from '../../common/TextFields/CommonTextFields';
-// using this to dynamically render form fields like text, select, autocomplete etc. with minimal code.
-import { Form, Formik } from 'formik';
+
 import generateValidationSchema from '../../utils/validation/generateValidationSchema';
-// Dynamically creates Yup validation schema based on form config.
 import { accordionConfig } from '../../config/AccordionConfig/accordionConfig';
-// Accordion-based form field config grouped by section.
 import { generateInitialValues } from '../../config/generateInitialValues';
 import { useDispatch, useSelector } from 'react-redux';
 import { addUserThunk } from '../../features/UserManagement/userManagementThunk';
-// using Formik to handle all form state, validations, and submit logic in a controlled way.
 
-const AddStaff = () => {
-  const formType = 'staffForm';
+const AddTeacher = () => {
+  const formType = 'teacherForm';
   const config = accordionConfig[formType];
   const dispatch = useDispatch();
-  //Loads the corresponding field sections for 'departmentForm'.
-  // const handleSubmit = async (values, { resetForm }) => {
-  //   // dispatch(addStaffThunk({payload:'formData'}))
-  //   // whenever form is submitted, logging all values and resetting the form to initial state.
-  //   try {
-  //     // Create FormData object to hold all form fields and files
-  //     const formData = new FormData();
-
-  //     // === Append all regular fields (text inputs) ===
-  //     Object.entries(values).forEach(([key, value]) => {
-  //       if (key !== 'uploadPhoto' && key !== 'educationDocument') {
-  //         formData.append(key, value);
-  //       }
-  //     });
-
-  //     // === Handle single file: uploadPhoto ===
-  //     if (values.uploadPhoto instanceof File) {
-  //       formData.append('uploadPhoto', values.uploadPhoto);
-  //     }
-
-  //     // === Handle multiple files: educationDocument ===
-  //     if (Array.isArray(values.educationDocument)) {
-  //       values.educationDocument.forEach(file => {
-  //         if (file instanceof File) {
-  //           formData.append('educationDocument', file); // ✔️ backend receives as array
-  //         }
-  //       });
-  //     }
-
-  //     // === Make the POST request ===
-  //     // const response = await fetch('/api/staff/add/staff', {
-  //     //   method: 'POST',
-  //     //   // headers: { Authorization: `Bearer ${token}` }, // 🔐 Add later if needed
-  //     //   body: formData,
-  //     // });
-  //     const response = await dispatch(addStaffThunk({ payload: formData }));
-
-  //     if (!response.ok) {
-  //       console.log( 'Failed to create staff');
-  //     }
-
-  //     // ✅ Success – reset form and show message
-  //     resetForm();
-  //   } catch (error) {
-  //     console.error('Error creating staff:', error);
-  //   }
-  // };
+  // const userData = useSelector(state => state);
 
   const handleSubmit = async (values, { resetForm }) => {
     try {
-      // Create FormData object to handle text fields and files
       const formData = new FormData();
       const fileFields = ['educationDocument', 'uploadPhoto'];
 
-      // Append all fields to FormData
       Object.entries(values).forEach(([key, value]) => {
         if (fileFields.includes(key)) {
           if (key === 'educationDocument' && Array.isArray(value)) {
-            // Handle multiple files for documents
-            value.forEach((file, index) => {
+            value.forEach(file => {
               if (file instanceof File) {
-                formData.append(`educationDocument`, file); // Append as 'documents' for multer array
+                formData.append(`educationDocument`, file);
               }
             });
           } else if (key === 'uploadPhoto' && value instanceof File) {
-            // Handle single file for uploadPhoto
             formData.append('uploadPhoto', value);
           }
         } else {
-          // Append non-file fields individually
           formData.append(key, value === null ? '' : value);
         }
       });
 
       // Log FormData entries for debugging
-      // for (let [key, value] of formData.entries()) {
-      //   console.log(`${key}:`, value);
-      // }
+      for (let [key, value] of formData.entries()) {
+        console.log(`${key}:`, value);
+      }
 
       // Dispatch addStaffThunk with FormData and headers
       const result = await dispatch(
@@ -112,8 +56,7 @@ const AddStaff = () => {
         })
       );
 
-      // On success, reset form and show success message
-      resetForm();     
+      resetForm();
     } catch (error) {
       // Handle errors and display in form
       console.error('Error creating staff:', error);
@@ -187,7 +130,7 @@ const AddStaff = () => {
         return (
           <Form>
             <Typography variant='h6' gutterBottom>
-              Add Staff
+              Add Teacher
             </Typography>
             <Grid container spacing={2}>
               {renderAccordionContent(config)}
@@ -213,4 +156,4 @@ const AddStaff = () => {
   );
 };
 
-export default AddStaff;
+export default AddTeacher;

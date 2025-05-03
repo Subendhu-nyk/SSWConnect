@@ -1,7 +1,6 @@
-const env = import.meta.env.MODE; 
+const env = import.meta.env.MODE;
 // If we're running npm run dev, then import.meta.env.MODE will be development.
 // If deployed in production, it will be production.
-
 
 // The apiConfig object holds the backend URLs for different environments.
 // Each key (e.g., signup, login, users) corresponds to a backend API endpoint.

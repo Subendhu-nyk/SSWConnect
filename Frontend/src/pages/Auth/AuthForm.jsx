@@ -1,6 +1,5 @@
-import { useEffect, useState } from 'react';
-import jwtEncode from 'jwt-encode';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Box,
@@ -14,8 +13,6 @@ import {
   IconButton,
   Divider,
   InputAdornment,
-  Snackbar,
-  Alert,
 } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import VpnKeyIcon from '@mui/icons-material/VpnKey';
@@ -23,10 +20,11 @@ import PersonIcon from '@mui/icons-material/Person';
 import SendIcon from '@mui/icons-material/Send';
 import { styled } from '@mui/material/styles';
 
-import { logout, setTokenFromStorage } from '../../features/AuthReducer/authSlice';
-import { fetchRolePermissions } from '../../features/AuthReducer/authThunk';
+import { authenticateUserThunk } from '../../features/AuthReducer/authThunk';
+import useToast from '../../hooks/useToast';
+import LoadingComponent from '../../components/LoadingComponent/LoadingComponent';
+
 import backgroundImage from '/cse3.jpg';
-import UserNotFoundScreen from '../../components/Screen/UserNotFoundScreen';
 
 const BackgroundContainer = styled(Box)({
   position: 'relative',
@@ -65,60 +63,38 @@ const LoginCard = styled(Box)({
 const AuthForm = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const location = useLocation();
-
+  const { showToast } = useToast();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [showLogoutMsg, setShowLogoutMsg] = useState(false);
-  const [isValidUser, setIsValidUser] = useState(false);
 
-  const { isAuthenticated } = useSelector(state => state.auth);
+  const { loading } = useSelector(state => state.auth);
 
-  // ✅ Auto logout if accessing /auth while logged in
-  useEffect(() => {
-    if (location.pathname === '/auth' && isAuthenticated) {
-      dispatch(logout());
-      localStorage.removeItem('token');
-      setShowLogoutMsg(true);
-    }
-  }, [location.pathname, isAuthenticated, dispatch]);
-
-  const handleCloseSnackbar = () => {
-    setShowLogoutMsg(false);
-  };
-
-  // ✅ Login handler
-  const handleMockLogin = () => {
-    const role = username.toLowerCase();
-    const validRoles = ['admin', 'teacher', 'student', 'staff'];
-
-    if (!validRoles.includes(role)) {
-      setIsValidUser(true);
-      return;
-    }
-
-    const mockPayload = {
-      name: username || 'John Doe',
-      email: `${username}@example.com`,
-      userId: '123',
-      role,
+  const handleLogin = async () => {
+    const loginPayload = {
+      password,
     };
 
-    const mockToken = jwtEncode(mockPayload, 'secret');
+    if (username.includes('@')) {
+      loginPayload.emailId = username;
+    } else {
+      loginPayload.user_id = username;
+    }
 
-    dispatch(setTokenFromStorage(mockToken));
-    dispatch(fetchRolePermissions({ role }));
-    localStorage.setItem('token', mockToken);
-
-    navigate('/');
+    try {
+      await dispatch(authenticateUserThunk({ payload: loginPayload })).unwrap();
+      navigate('/'); // Let router handle role-based redirect
+    } catch (err) {
+      showToast('error', `${err} Please try again.`);
+      navigate('/auth');
+    }
   };
 
   return (
     <BackgroundContainer>
       <Overlay />
+      {loading.login && <LoadingComponent />}
       <LoginCard>
-        {/* Top branding section using Box (centered content) */}
         <Box display='flex' flexDirection='column' alignItems='center' mb={3}>
           <Box
             component='img'
@@ -128,34 +104,19 @@ const AuthForm = () => {
             alt='Brand Logo'
             sx={{ mb: 1 }}
           />
-          <Typography
-            variant='h4'
-            sx={{
-              fontWeight: 'bold',
-              mt: 2,
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              color: '#222',
-            }}
-          >
+          <Typography variant='h4' sx={{ fontWeight: 'bold', mt: 2, color: '#222' }}>
             Welcome to SSWConnect
           </Typography>
           <Typography variant='body2' sx={{ mt: 1, color: '#333', textAlign: 'center' }}>
             Access your personalized dashboard to connect, analyze reports, track attendance, view
-            events, get admin notifications, and read messages from the principal or directors—all
-            in one place.{' '}
+            events, and more.
           </Typography>
         </Box>
 
         <Divider sx={{ my: 2 }} />
 
-        {/* Form section */}
         <Box component='form'>
-          <Typography
-            variant='subtitle1'
-            sx={{ fontWeight: 700, color: '#000', textAlign: 'center' }}
-          >
+          <Typography variant='subtitle1' sx={{ fontWeight: 700, textAlign: 'center' }}>
             USER LOGIN
           </Typography>
 
@@ -173,11 +134,7 @@ const AuthForm = () => {
                 </InputAdornment>
               ),
             }}
-            sx={{
-              '& .MuiOutlinedInput-root': {
-                borderRadius: '12px',
-              },
-            }}
+            sx={{ '& .MuiOutlinedInput-root': { borderRadius: '12px' } }}
           />
 
           <TextField
@@ -196,21 +153,13 @@ const AuthForm = () => {
               ),
               endAdornment: (
                 <InputAdornment position='end'>
-                  <IconButton
-                    aria-label='toggle password visibility'
-                    onClick={() => setShowPassword(!showPassword)}
-                    edge='end'
-                  >
+                  <IconButton onClick={() => setShowPassword(!showPassword)} edge='end'>
                     {showPassword ? <VisibilityOff /> : <Visibility />}
                   </IconButton>
                 </InputAdornment>
               ),
             }}
-            sx={{
-              '& .MuiOutlinedInput-root': {
-                borderRadius: '12px',
-              },
-            }}
+            sx={{ '& .MuiOutlinedInput-root': { borderRadius: '12px' } }}
           />
 
           <Grid container justifyContent='space-between' alignItems='center'>
@@ -223,18 +172,19 @@ const AuthForm = () => {
               </Link>
             </Grid>
           </Grid>
+
           <Button
             variant='contained'
             color='primary'
             fullWidth
-            onClick={handleMockLogin}
-            disabled={!username || !password}
-            sx={{ fontWeight: 'bold', fontSize: '1rem', borderRadius: '8px', margin: '10px 0px' }}
+            onClick={handleLogin}
+            disabled={!username || !password || loading.login}
+            sx={{ fontWeight: 'bold', fontSize: '1rem', borderRadius: '8px', my: 2 }}
           >
-            Login
+            {loading.login ? 'Logging in...' : 'Login'}
           </Button>
 
-          <Typography variant='body2' sx={{ my: 2 }}>
+          <Typography variant='body2'>
             Don’t have an account?{' '}
             <Link href='#' sx={{ fontWeight: 500 }}>
               Click Here
@@ -242,16 +192,7 @@ const AuthForm = () => {
           </Typography>
         </Box>
       </LoginCard>
-      <Snackbar
-        open={showLogoutMsg}
-        autoHideDuration={3000}
-        onClose={handleCloseSnackbar}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-      >
-        <Alert severity='info' variant='filled' onClose={handleCloseSnackbar}>
-          You have been logged out due to navigation.
-        </Alert>
-      </Snackbar>
+
       <Button
         variant='contained'
         endIcon={<SendIcon />}
@@ -260,18 +201,15 @@ const AuthForm = () => {
           position: 'absolute',
           top: '1rem',
           right: '1rem',
-          zIndex: 3, // Make sure it's above overlay (zIndex: 1)
+          zIndex: 3,
           backgroundColor: '#3b30c8',
           color: '#fff',
           fontWeight: 'bold',
-          '&:hover': {
-            backgroundColor: '#756ed8',
-          },
+          '&:hover': { backgroundColor: '#756ed8' },
         }}
       >
         Back to website
       </Button>
-      {isValidUser && <UserNotFoundScreen />}
     </BackgroundContainer>
   );
 };

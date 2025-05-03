@@ -8,20 +8,19 @@ app.use(express.json());
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-const db = require('./models');
+const db = require("./models");
 const sequelize = require("./util/sswconnectDatabase");
-const staffRoutes = require('./routes/staffRoutes');
+const userRoutes = require("./routes/userRoutes");
 
-app.use(staffRoutes);
-app.get('/', (req, res) => {
-  res.send('University Dashboard API is running 🏫');
+app.use(userRoutes);
+app.get("/", (req, res) => {
+  res.send("University Dashboard API is running ");
 });
 
 const PORT = process.env.PORT || 3000;
 sequelize
   .sync()
   .then(() => {
-    
     console.log("Database Schema Updated");
     app.listen(PORT, () => {
       console.log(`Server is running on http://localhost:${PORT}`);

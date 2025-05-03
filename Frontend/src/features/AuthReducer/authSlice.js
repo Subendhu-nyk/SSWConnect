@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { jwtDecode } from 'jwt-decode';
-import { authenticateUser, fetchRolePermissions } from './authThunk';
+import { authenticateUserThunk } from './authThunk';
 
 const tokenFromStorage = localStorage.getItem('token');
 let decodedUser = null;
@@ -8,21 +8,21 @@ let decodedUser = null;
 if (tokenFromStorage) {
   try {
     decodedUser = jwtDecode(tokenFromStorage);
+    decodedUser.role = decodedUser.role.toLowerCase();
   } catch (e) {
-    console.error(e);
+    console.error('Invalid stored token:', e);
   }
 }
 
 const initialState = {
-  token: tokenFromStorage || null,
+  token: tokenFromStorage || '',
   user: decodedUser || null,
-  permissions: [], // parent menu ids (e.g., ['dashboard', 'courses'])
   isAuthenticated: !!tokenFromStorage,
+  permissions: [],
   loading: {
     login: false,
-    fetchPermissions: false,
   },
-  error: null,
+  error: '',
 };
 
 const authSlice = createSlice({
@@ -36,49 +36,29 @@ const authSlice = createSlice({
       state.isAuthenticated = false;
       localStorage.removeItem('token');
     },
-    setTokenFromStorage(state, action) {
-      const token = action.payload;
-      state.token = token;
-      state.user = jwtDecode(token);
-      state.isAuthenticated = true;
-    },
   },
   extraReducers: builder => {
     builder
-      // 🔐 Login Auth
-      .addCase(authenticateUser.pending, state => {
+      .addCase(authenticateUserThunk.pending, state => {
         state.loading.login = true;
         state.error = null;
       })
-      .addCase(authenticateUser.fulfilled, (state, action) => {
+      .addCase(authenticateUserThunk.fulfilled, (state, action) => {       
         const token = action.payload.token;
         const decoded = jwtDecode(token);
         state.token = token;
+        decoded.role = decoded.role.toLowerCase();
         state.user = decoded;
         state.isAuthenticated = true;
         localStorage.setItem('token', token);
-        // Permissions will be fetched after this via fetchRolePermissions
-      })
-      .addCase(authenticateUser.rejected, (state, action) => {
         state.loading.login = false;
-        state.error = action.payload?.message || 'Login failed';
       })
-
-      // 📥 Fetch Role Menus
-      .addCase(fetchRolePermissions.pending, state => {
-        state.loading.fetchPermissions = true;
-        state.error = null;
-      })
-      .addCase(fetchRolePermissions.fulfilled, (state, action) => {
-        state.loading.fetchPermissions = false;
-        state.permissions = action.payload.data || [];
-      })
-      .addCase(fetchRolePermissions.rejected, (state, action) => {
-        state.loading.fetchPermissions = false;
-        state.error = action.payload?.message || 'Failed to fetch permissions';
+      .addCase(authenticateUserThunk.rejected, (state, action) => {
+        state.loading.login = false;
+        state.error = action.payload || 'Login failed';
       });
   },
 });
 
-export const { logout, setTokenFromStorage } = authSlice.actions;
+export const { logout } = authSlice.actions;
 export default authSlice.reducer;

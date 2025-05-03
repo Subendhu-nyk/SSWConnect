@@ -66,3 +66,56 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+/* customToastCss.css */
+.Toastify__toast-container {
+  width: 450px !important;
+}
+
+.Toastify__toast {
+  padding: 0;
+  /* background: none !important; */
+  box-shadow: none !important;
+  margin-bottom: 1rem;
+  width: 450px !important;
+}
+.custom-toast {
+  background: none !important;
+}
+
+.Toastify__toast-body {
+  padding: 0;
+  margin: 0;
+}
+
+.Toastify__close-button {
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  opacity: 0.5;
+  color: rgba(0, 0, 0, 0.54);
+  transition: opacity 0.2s;
+}
+
+.Toastify__close-button:hover {
+  opacity: 1;
+}
+
+/* Animation classes */
+.Toastify__toast--enter {
+  transform: translateX(100%);
+}
+
+.Toastify__toast--enter-active {
+  transform: translateX(0);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.Toastify__toast--exit {
+  transform: translateX(0);
+}
+
+.Toastify__toast--exit-active {
+  transform: translateX(100%);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}

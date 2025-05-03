@@ -6,6 +6,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/lib/integration/react.js';
 import { store, persistor } from './store/store.js';
+import ToastProvider from './common/Toast/ToastProvider.jsx';
 
 const Config = () => {
   // const environment = window.location.hostname;
@@ -37,6 +38,7 @@ const App = () => {
     <Provider store={store}>
       {/* Provide the store to the entire app */}
       <PersistGate loading={null} persistor={persistor}>
+        <ToastProvider />
         <Config />
       </PersistGate>
     </Provider>
