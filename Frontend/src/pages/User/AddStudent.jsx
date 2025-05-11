@@ -13,14 +13,21 @@ import CommonTextFields from '../../common/TextFields/CommonTextFields';
 import generateValidationSchema from '../../utils/validation/generateValidationSchema';
 import { accordionConfig } from '../../config/AccordionConfig/accordionConfig';
 import { generateInitialValues } from '../../config/generateInitialValues';
+import CommonFilter from '../../common/CommonFilter/CommonFilter';
+import { useState } from 'react';
 // import { useDispatch, useSelector } from 'react-redux';
 // import { addUserThunk } from '../../features/UserManagement/userManagementThunk';
 
 const AddTeacher = () => {
   const formType = 'studentForm';
   const config = accordionConfig[formType];
+  const [query, setQuery] = useState(''); 
   // const dispatch = useDispatch();
   // const userData = useSelector(state => state);
+
+  const handleSearch = searchKey => {
+    setQuery(searchKey); // save search term
+  };
 
   const handleSubmit = async (values, { resetForm }) => {
     try {
@@ -104,6 +111,18 @@ const AddTeacher = () => {
   };
 
   return (
+    <>
+    <CommonFilter
+    title="Add Students"
+    onSearch={handleSearch}
+    onAdd={() => console.log('Add new')}
+    onImport={() => console.log('Import XLSX')}
+    onExport={() => console.log('Export')}
+    onDownloadTemplate={() => console.log('Download template')}
+    onRefresh={() => console.log('Refresh')}
+    onRecycleBin={() => console.log('To recycle bin')}
+    onPrint={() => window.print()}
+  />
     <Formik
       initialValues={initialValues}
       // passing the default values object so Formik knows what each field starts with
@@ -122,10 +141,7 @@ const AddTeacher = () => {
         // using Formik's render function to access form helpers like resetForm and validation states
         console.log('error', errors);
         return (
-          <Form>
-            <Typography variant='h6' gutterBottom>
-              Add Student
-            </Typography>
+          <Form>        
             <Grid container spacing={2}>
               {renderAccordionContent(config)}
               <Grid item xs={12} container justifyContent='flex-end' spacing={2}>
@@ -147,6 +163,8 @@ const AddTeacher = () => {
         );
       }}
     </Formik>
+    </>
+    
   );
 };
 

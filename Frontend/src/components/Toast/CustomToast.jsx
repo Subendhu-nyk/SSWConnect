@@ -8,8 +8,8 @@ const CustomToast = ({ type, message, theme }) => {
     info: <Info style={{ width: 20, height: 20, color: '#3b82f6' }} />,
     warning: <AlertTriangle style={{ width: 20, height: 20, color: '#facc15' }} />,
     danger: <XCircle style={{ width: 20, height: 20, color: '#dc2626' }} />,
-    process: <Hourglass style={{ width: 20, height: 20, color: '#facc15'}} />   
-};
+    process: <Hourglass style={{ width: 20, height: 20, color: '#facc15' }} />,
+  };
 
   const titles = {
     success: 'Success',
@@ -17,7 +17,7 @@ const CustomToast = ({ type, message, theme }) => {
     info: 'Information',
     warning: 'Warning',
     danger: 'Danger',
-    process:'Processing'
+    process: 'Processing',
   };
 
   const bgColors = {

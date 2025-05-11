@@ -3,7 +3,7 @@ const router = express.Router();
 
 // Import multer middleware we created earlier
 const upload = require("../middleware/fileUpload");
-const authenticatemiddleware = require("../middleware/auth");
+const authenticatemiddleware = require("../middleware/authenticate");
 
 // Import the controller that handles logic for adding staff
 const userController = require("../controllers/userController");
