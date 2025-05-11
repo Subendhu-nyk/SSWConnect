@@ -32,11 +32,8 @@ const AddDepartment = () => {
         addDepartmentThunk({
           payload: values, 
         })
-      );  
-      
-      console.log("result >>>>>", result)
-  
-      // resetForm(); // Clear the form on success
+      );   
+      resetForm(); // Clear the form on success
     } catch (error) {
       console.error('Error creating department:', error);
       // Optional: Show error toast/snackbar

@@ -8,7 +8,6 @@ const authenticate = async (req, res, next) => {
     if (!token) {
       return res.status(401).json({ success: false, message: 'Access denied. No token provided.' });
     }
-
     const user = jwt.verify(token, process.env.JWT_SECRET);
     // const user = await User.findByPk(decoded.userId);
     console.log("token>>>>",user)
