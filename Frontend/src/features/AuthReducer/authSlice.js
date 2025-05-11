@@ -4,20 +4,29 @@ import { authenticateUserThunk } from './authThunk';
 
 const tokenFromStorage = localStorage.getItem('token');
 let decodedUser = null;
+let isExpired = false;
 
 if (tokenFromStorage) {
   try {
     decodedUser = jwtDecode(tokenFromStorage);
     decodedUser.role = decodedUser.role.toLowerCase();
+    const currentTime = Math.floor(Date.now() / 1000);
+    if (decodedUser.exp < currentTime) {
+      console.warn('JWT expired');
+      localStorage.removeItem('token');
+      decodedUser = null;
+      isExpired = true;
+    }
   } catch (e) {
     console.error('Invalid stored token:', e);
+    localStorage.removeItem('token');
   }
 }
 
 const initialState = {
-  token: tokenFromStorage || '',
+  token: isExpired ? '' : tokenFromStorage,
   user: decodedUser || null,
-  isAuthenticated: !!tokenFromStorage,
+  isAuthenticated: !!tokenFromStorage && !isExpired,
   permissions: [],
   loading: {
     login: false,
@@ -43,9 +52,23 @@ const authSlice = createSlice({
         state.loading.login = true;
         state.error = null;
       })
-      .addCase(authenticateUserThunk.fulfilled, (state, action) => {       
+      .addCase(authenticateUserThunk.fulfilled, (state, action) => {
         const token = action.payload.token;
         const decoded = jwtDecode(token);
+        const currentTime = Math.floor(Date.now() / 1000);
+
+        const expiresIn = decoded.exp - currentTime;
+        if (expiresIn <= 0) {
+          // Already expired
+          return;
+        }
+
+        // Schedule logout
+        setTimeout(() => {
+          window.location.href = '/login'; // or use navigate() if using react-router
+          localStorage.removeItem('token');
+          window.location.reload(); // force logout & re-init state
+        }, expiresIn * 1000);
         state.token = token;
         decoded.role = decoded.role.toLowerCase();
         state.user = decoded;

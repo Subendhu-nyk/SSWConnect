@@ -4,7 +4,7 @@ export const DepartmentDetailFields = [
       name: 'departmentName',
       label: 'Department Name',
       placeholder: 'Enter Department Name',
-      maxLength: '20',
+      maxLength: '60',
       autoFlag: false,
       required:true
     },

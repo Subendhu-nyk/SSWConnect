@@ -3,50 +3,11 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import createApiThunk from '../../services/apiThunkHelper';
 // import { destination_BP } from '../../config/destinationVariableConfig';
 
-// Fake JWT encoder (mock only)
-// const fakeJWTEncode = data => {
-//   return btoa(JSON.stringify(data)); // base64 encode (NOT secure, just mock)
-// };
 
 // 1. Login Authentication (POST)
 export const authenticateUserThunk = createAsyncThunk(
   'auth/authenticateUser',
-    createApiThunk('POST', `http://localhost:3000/auth/login`)
-  // async ({ username }) => {
-  //   // 🧪 Simulated API delay
-  //   await new Promise(res => setTimeout(res, 500));
-
-  //   // 🔐 MOCK AUTH RESPONSE BASED ON username
-  //   const mockUserMap = {
-  //     admin: {
-  //       role: 'admin',
-  //       email: 'admin@example.com',
-  //       name: 'Admin User',
-  //       userId: '1',
-  //     },
-  //     teacher: {
-  //       role: 'teacher',
-  //       email: 'teacher@example.com',
-  //       name: 'Teacher User',
-  //       userId: '2',
-  //     },
-  //     student: {
-  //       role: 'student',
-  //       email: 'student@example.com',
-  //       name: 'Student User',
-  //       userId: '3',
-  //     },
-  //   };
-
-  //   const userData = mockUserMap[username.toLowerCase()] || mockUserMap.student;
-
-  //   // Encode fake JWT (in real app, get from backend)
-  //   const token = fakeJWTEncode(userData);
-
-  //   return {
-  //     token,
-  //   };
-  // }
+    createApiThunk('POST', `http://localhost:3000/auth/login`) 
 );
 
 // 2. Get Role-Based Menus (POST, requires role in body)

@@ -26,7 +26,6 @@ const UserProfile = ({ anchorEl = false, userData = {}, handleClose = () => {} }
   const navigate = useNavigate();
 
   const { user } = useSelector(state => state.auth);
-
   const onLogout = () => {
     dispatch(logout());
     localStorage.removeItem('token');
@@ -103,7 +102,7 @@ const UserProfile = ({ anchorEl = false, userData = {}, handleClose = () => {} }
                   {capitalizeWords(user.role) || 'Administrator'}
                 </Typography>
                 <Typography variant='body2' sx={{ color: '#666', fontSize: '0.85rem' }}>
-                  User ID: {userData?.user_id || 'SSW105'}
+                  User ID: {user?.userId || 'SSW105'}
                 </Typography>
               </Box>
             </Box>

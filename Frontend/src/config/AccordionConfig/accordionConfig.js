@@ -1,4 +1,5 @@
 import { DepartmentDetailFields } from '../FormFieldConfig/DepartmentFieldConfig/departmentDetailFields';
+import { DesignationDetailFields } from '../FormFieldConfig/DesignationFieldConfig/designationDetailField';
 import { StaffDetailFields } from '../FormFieldConfig/UserFieldConfig/staffDetailFields';
 import { StudentDetailFields } from '../FormFieldConfig/UserFieldConfig/studentDetailFields';
 import { TeacherDetailFields } from '../FormFieldConfig/UserFieldConfig/teacherDetailFields';
@@ -11,6 +12,12 @@ export const accordionConfig = {
     {
       sectionName: 'Department Details',
       fields: DepartmentDetailFields,
+    },
+  ],
+  designationForm: [
+    {
+      sectionName: 'Designation Details',
+      fields: DesignationDetailFields,
     },
   ],
   staffForm: [

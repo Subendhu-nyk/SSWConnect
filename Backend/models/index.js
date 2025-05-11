@@ -14,12 +14,13 @@ db.sequelize = sequelize;       // connected Sequelize instance
 // 5. Import models and inject sequelize instance + DataTypes
 
 // Example: import model and attach it to db.User
-db.User = require('./userProfile')(sequelize, Sequelize.DataTypes);
-db.StudentProfile = require('./studentProfile')(sequelize, Sequelize.DataTypes);
-db.TeacherProfile = require('./TeacherProfile')(sequelize, Sequelize.DataTypes);
-db.StaffProfile = require('./StaffProfile')(sequelize, Sequelize.DataTypes);
-db.UserDocuments = require('./userDocuments')(sequelize, Sequelize.DataTypes);
-
+db.User = require('./userProfile/userProfile')(sequelize, Sequelize.DataTypes);
+db.StudentProfile = require('./userProfile/studentProfile')(sequelize, Sequelize.DataTypes);
+db.TeacherProfile = require('./userProfile/teacherProfile')(sequelize, Sequelize.DataTypes);
+db.StaffProfile = require('./userProfile/staffProfile')(sequelize, Sequelize.DataTypes);
+db.UserDocuments = require('./userProfile/userDocuments')(sequelize, Sequelize.DataTypes);
+db.Department=require('./department/department')(sequelize, Sequelize.DataTypes);
+db.Designation = require('./designation/designation')(sequelize, Sequelize.DataTypes);
 
 // For academic structure
 // db.Department = require('./Department')(sequelize, Sequelize.DataTypes);

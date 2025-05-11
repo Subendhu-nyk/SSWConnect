@@ -5,6 +5,7 @@ const StudentDashboard = lazy(() => import('../pages/Dashboard/Student/StudentDa
 const TeacherDashboard = lazy(() => import('../pages/Dashboard/Teacher/TeacherDashboard'));
 const StaffDashboard = lazy(() => import('../pages/Dashboard/Staff/StaffDashboard'));
 const AddDepartment = lazy(() => import('../pages/Department/AddDepartment'));
+const AddDesignation = lazy(() => import('../pages/Department/AddDesignation'));
 const AddStaff = lazy(() => import('../pages/User/AddStaff'));
 const AddStudent = lazy(() => import('../pages/User/AddStudent'));
 const AddTeacher = lazy(() => import('../pages/User/AddTeacher'));
@@ -33,6 +34,11 @@ const routesConfig = [
   {
     path: 'add/departments',
     component: AddDepartment,
+    requiredRole: ['admin', 'staff'],
+  },
+  {
+    path: 'add/designations',
+    component: AddDesignation,
     requiredRole: ['admin', 'staff'],
   },
   {

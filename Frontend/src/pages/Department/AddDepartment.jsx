@@ -18,16 +18,27 @@ import generateValidationSchema from '../../utils/validation/generateValidationS
 import { accordionConfig } from '../../config/AccordionConfig/accordionConfig';
 // Accordion-based form field config grouped by section.
 import { generateInitialValues } from '../../config/generateInitialValues';
+import { addDepartmentThunk } from '../../features/ManagementReducer/hrmManagementThunk';
+import { useDispatch } from 'react-redux';
 // using Formik to handle all form state, validations, and submit logic in a controlled way.
 
 const AddDepartment = () => {
   const formType = 'departmentForm';
   const config = accordionConfig[formType];
-  //Loads the corresponding field sections for 'departmentForm'.
-  const handleSubmit = (values, { resetForm }) => {
-    // whenever form is submitted, logging all values and resetting the form to initial state.
-    // console.log('Formik Inside handleSubmit - Values:', values);
-    resetForm();
+  const dispatch = useDispatch() 
+  const handleSubmit = async (values, { resetForm }) => {
+    try {
+      const result = await dispatch(
+        addDepartmentThunk({
+          payload: values, 
+        })
+      );   
+      resetForm(); // Clear the form on success
+    } catch (error) {
+      console.error('Error creating department:', error);
+      // Optional: Show error toast/snackbar
+      // toast.error("Failed to create department");
+    }
   };
 
   const initialValues = generateInitialValues(config);

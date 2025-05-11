@@ -184,7 +184,7 @@ const addUser = async (req, res) => {
     if (roles === "Staff") {
       staffProfile = await StaffProfile.create(
         {
-          education: JSON.stringify(education), // 🧠 Fix: convert objects to string!
+          education: JSON.stringify(education), // Fix: convert objects to string!
           joiningDate,
           experience,
           designation,
