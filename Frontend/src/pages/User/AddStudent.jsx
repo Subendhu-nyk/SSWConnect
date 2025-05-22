@@ -115,6 +115,12 @@ const AddTeacher = () => {
     <CommonFilter
     title="Add Students"
     onSearch={handleSearch}
+    showSearch={false}
+    showAdd={true}
+    showImport={true}
+    showDownloadTemplate={true}
+    showRefresh={true}
+    showRecycleBin={true}
     onAdd={() => console.log('Add new')}
     onImport={() => console.log('Import XLSX')}
     onExport={() => console.log('Export')}
