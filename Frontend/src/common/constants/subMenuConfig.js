@@ -450,56 +450,56 @@ export const subMenuConfig = [
     path: 'students/add-template',
     requiredRole: ['admin'],
   },
-  {
-    id: 'studentTemplate',
-    label: 'Edit Student Template',
-    path: 'students/edit-template',
-    requiredRole: ['admin'],
-  },
-  {
-    id: 'studentTemplate',
-    label: 'Delete Student Template',
-    path: 'students/delete-template',
-    requiredRole: ['admin'],
-  },
+  // {
+  //   id: 'studentTemplate',
+  //   label: 'Edit Student Template',
+  //   path: 'students/edit-template',
+  //   requiredRole: ['admin'],
+  // },
+  // {
+  //   id: 'studentTemplate',
+  //   label: 'Delete Student Template',
+  //   path: 'students/delete-template',
+  //   requiredRole: ['admin'],
+  // },
 
-  // TEACHERS
-  {
-    id: 'teacherTemplate',
-    label: 'Add Teacher Template',
-    path: '/teachers/add-template',
-    requiredRole: ['admin'],
-  },
-  {
-    id: 'teacherTemplate',
-    label: 'Edit Teacher Template',
-    path: '/teachers/edit-template',
-    requiredRole: ['admin'],
-  },
-  {
-    id: 'teacherTemplate',
-    label: 'Delete Teacher Template',
-    path: 'teachers/delete-template',
-    requiredRole: ['admin'],
-  },
+  // // TEACHERS
+  // {
+  //   id: 'teacherTemplate',
+  //   label: 'Add Teacher Template',
+  //   path: '/teachers/add-template',
+  //   requiredRole: ['admin'],
+  // },
+  // {
+  //   id: 'teacherTemplate',
+  //   label: 'Edit Teacher Template',
+  //   path: '/teachers/edit-template',
+  //   requiredRole: ['admin'],
+  // },
+  // {
+  //   id: 'teacherTemplate',
+  //   label: 'Delete Teacher Template',
+  //   path: 'teachers/delete-template',
+  //   requiredRole: ['admin'],
+  // },
 
-  // STAFF
-  {
-    id: 'staffTemplate',
-    label: 'Add Staff Template',
-    path: '/staff/add-template',
-    requiredRole: ['admin'],
-  },
-  {
-    id: 'staffTemplate',
-    label: 'Edit Staff Template',
-    path: '/staff/edit-template',
-    requiredRole: ['admin'],
-  },
-  {
-    id: 'staffTemplate',
-    label: 'Delete Staff Template',
-    path: '/staff/delete-template',
-    requiredRole: ['admin'],
-  },
+  // // STAFF
+  // {
+  //   id: 'staffTemplate',
+  //   label: 'Add Staff Template',
+  //   path: '/staff/add-template',
+  //   requiredRole: ['admin'],
+  // },
+  // {
+  //   id: 'staffTemplate',
+  //   label: 'Edit Staff Template',
+  //   path: '/staff/edit-template',
+  //   requiredRole: ['admin'],
+  // },
+  // {
+  //   id: 'staffTemplate',
+  //   label: 'Delete Staff Template',
+  //   path: '/staff/delete-template',
+  //   requiredRole: ['admin'],
+  // },
 ];
