@@ -447,15 +447,15 @@ export const subMenuConfig = [
   {
     id: 'studentTemplate',
     label: 'Add Student Template',
-    path: 'students/add-template',
+    path: 'student/add-template',
     requiredRole: ['admin'],
   },
-  // {
-  //   id: 'studentTemplate',
-  //   label: 'Edit Student Template',
-  //   path: 'students/edit-template',
-  //   requiredRole: ['admin'],
-  // },
+  {
+    id: 'studentTemplate',
+    label: 'Edit Student Template',
+    path: 'student/edit-template',
+    requiredRole: ['admin'],
+  },
   // {
   //   id: 'studentTemplate',
   //   label: 'Delete Student Template',
@@ -464,18 +464,18 @@ export const subMenuConfig = [
   // },
 
   // // TEACHERS
-  // {
-  //   id: 'teacherTemplate',
-  //   label: 'Add Teacher Template',
-  //   path: '/teachers/add-template',
-  //   requiredRole: ['admin'],
-  // },
-  // {
-  //   id: 'teacherTemplate',
-  //   label: 'Edit Teacher Template',
-  //   path: '/teachers/edit-template',
-  //   requiredRole: ['admin'],
-  // },
+  {
+    id: 'teacherTemplate',
+    label: 'Add Teacher Template',
+    path: 'teacher/add-template',
+    requiredRole: ['admin'],
+  },
+  {
+    id: 'teacherTemplate',
+    label: 'Edit Teacher Template',
+    path: 'teacher/edit-template',
+    requiredRole: ['admin'],
+  },
   // {
   //   id: 'teacherTemplate',
   //   label: 'Delete Teacher Template',
@@ -484,18 +484,18 @@ export const subMenuConfig = [
   // },
 
   // // STAFF
-  // {
-  //   id: 'staffTemplate',
-  //   label: 'Add Staff Template',
-  //   path: '/staff/add-template',
-  //   requiredRole: ['admin'],
-  // },
-  // {
-  //   id: 'staffTemplate',
-  //   label: 'Edit Staff Template',
-  //   path: '/staff/edit-template',
-  //   requiredRole: ['admin'],
-  // },
+  {
+    id: 'staffTemplate',
+    label: 'Add Staff Template',
+    path: 'staff/add-template',
+    requiredRole: ['admin'],
+  },
+  {
+    id: 'staffTemplate',
+    label: 'Edit Staff Template',
+    path: 'staff/edit-template',
+    requiredRole: ['admin'],
+  },
   // {
   //   id: 'staffTemplate',
   //   label: 'Delete Staff Template',

@@ -13,10 +13,12 @@ const sequelize = require("./util/sswconnectDatabase");
 const userRoutes = require("./routes/userRoutes");
 const departmentRoutes = require ("./routes/departmentRoutes")
 const designationRoutes = require ("./routes/designationRoutes")
+const templateRoutes = require('./routes/templateRoutes');
 
 app.use(userRoutes);
 app.use(departmentRoutes)
 app.use(designationRoutes)
+app.use(templateRoutes);
 app.get("/", (req, res) => {
   res.send("University Dashboard API is running ");
 });

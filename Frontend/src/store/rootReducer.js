@@ -9,6 +9,7 @@ import ThemeReducer from '../features/ThemeReducer/themeSlice.js';
 import AuthReducer from '../features/AuthReducer/authSlice.js';
 import userManagementReducer from '../features/UserManagement/userManagementSlice.js';
 import hrmManagementReducer from '../features/ManagementReducer/hrmManagementSlice.js'
+import templateReducer from '../features/TemplateReducer/templateSlice.js'
 // import DashboardReducer from '../features/DashboardSlice/DashboardSlice';
 // import TokenReducer from '../features/SystemConfigurationReducers/TokenReducer/tokenSlice';
 
@@ -28,7 +29,8 @@ const rootReducer = combineReducers({
   theme: ThemeReducer,
   auth: AuthReducer,
   userManagement: userManagementReducer,
-  hrmManagement: hrmManagementReducer
+  hrmManagement: hrmManagementReducer,
+  template:templateReducer,
   //   dashboard: DashboardReducer,
   //   token: TokenReducer,
 });

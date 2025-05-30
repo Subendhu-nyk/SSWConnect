@@ -1,7 +1,7 @@
 const bcrypt = require("bcrypt");
 const fs = require("fs");
 const path = require("path");
-const jwt=require('jsonwebtoken')
+const jwt = require("jsonwebtoken");
 
 const {
   sequelize,
@@ -426,43 +426,52 @@ const downloadDocument = async (req, res) => {
 };
 
 const generateAccessToken = (id, role) => {
-  return jwt.sign({ userId: id, role }, process.env.JWT_SECRET, { expiresIn: '1h' });
+  return jwt.sign({ userId: id, role }, process.env.JWT_SECRET, {
+    expiresIn: "1h",
+  });
 };
 
 const userLogin = async (req, res) => {
   try {
     const { emailId, password, user_id } = req.body;
-    
+
     if (!password) {
-      return res.status(400).json({ success: false, message: 'Password is required.' });
+      return res
+        .status(400)
+        .json({ success: false, message: "Password is required." });
     }
 
     if (!emailId && !user_id) {
-      return res.status(400).json({ success: false, message: 'Please provide email or user ID.' });
+      return res
+        .status(400)
+        .json({ success: false, message: "Please provide email or user ID." });
     }
 
     const whereCondition = emailId ? { emailId } : { user_id };
-    console.log("req.body>>>>>>>.........",req.body, user_id,password, whereCondition)
     const user = await User.findOne({ where: whereCondition });
 
     if (!user) {
-      return res.status(404).json({ success: false, message: 'User does not exist.' });
+      return res
+        .status(404)
+        .json({ success: false, message: "User does not exist." });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(400).json({ success: false, message: 'Incorrect password.' });
+      return res
+        .status(400)
+        .json({ success: false, message: "Incorrect password." });
     }
 
     const token = generateAccessToken(user.user_id, user.roles);
     res.status(200).json({
       success: true,
-      message: 'User logged in successfully.',
+      message: "User logged in successfully.",
       token,
     });
   } catch (err) {
-    console.error('Login error:', err);
-    res.status(500).json({ success: false, message: 'Internal server error.' });
+    console.error("Login error:", err);
+    res.status(500).json({ success: false, message: "Internal server error." });
   }
 };
 
