@@ -16,3 +16,8 @@ export const getTemplateThunk = createAsyncThunk(
   'user/getTemplate',
   createApiThunk('GET', `http://localhost:3000/get-template`)
 );
+
+export const deleteTemplateThunk = createAsyncThunk(
+  'user/deleteTemplate',
+  createApiThunk('POST', `http://localhost:3000/delete-template`)
+);

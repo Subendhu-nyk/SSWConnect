@@ -8,15 +8,17 @@ const createTemplate = async (req, res) => {
     if (!Array.isArray(fields) || fields.length === 0) {
       return res.status(400).json({
         success: false,
-        message: 'Fields cannot be empty.',
+        message: "Fields cannot be empty.",
       });
     }
 
-     const existingTemplate = await Template.findOne({ where: { templateName } });
-     if (existingTemplate && existingTemplate.fields.length > 0) {
+    const existingTemplate = await Template.findOne({
+      where: { templateName },
+    });
+    if (existingTemplate && existingTemplate.fields.length > 0) {
       return res.status(409).json({
         success: false,
-        message: 'Template with this name already exists.',
+        message: "Template with this name already exists.",
       });
     }
     const template = await Template.create({ templateName, fields, createdBy });
@@ -54,8 +56,8 @@ const getTemplateById = async (req, res) => {
   }
 };
 
-const updateTemplate = async (req, res) => {  
-  try {     
+const updateTemplate = async (req, res) => {
+  try {
     const { templateName, fields } = req.body;
 
     const template = await Template.findOne({ where: { templateName } });
@@ -78,9 +80,11 @@ const updateTemplate = async (req, res) => {
 };
 
 // DELETE /api/templates/:id
-const deleteTemplate = async (req, res) => {
+const deleteTemplate = async (req, res) => { 
   try {
-    const deleted = await Template.destroy({ where: { id: req.params.id } });
+    const deleted = await Template.destroy({
+      where: { templateName: req.body.templateName },
+    });
     if (!deleted)
       return res.status(404).json({ message: "Template not found" });
     res.status(200).json({ success: true, message: "Template deleted" });

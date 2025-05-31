@@ -1,15 +1,17 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { addTemplateThunk, editTemplateThunk, getTemplateThunk } from './templateThunk';
+import { addTemplateThunk, deleteTemplateThunk, editTemplateThunk, getTemplateThunk } from './templateThunk';
 
 const initialState = {
   addTemplateData: [],
   getTemplateData: [],
   editTemplateData: [],
+  deleteTemplateData: [],
   error: null,
   loading: {
     addTemplateLoading: false,
     getTemplateLoading: false,
     editTemplateLoading: false,
+    deleteTemplateLoading: false,
   },
 };
 const templateSlice = createSlice({
@@ -51,6 +53,18 @@ const templateSlice = createSlice({
       })
       .addCase(editTemplateThunk.rejected, (state, action) => {
         state.loading.editTemplateLoading = false;
+        state.error = action.payload;
+      })
+      .addCase(deleteTemplateThunk.pending, state => {
+        state.loading.deleteTemplateLoading = true;
+        state.error = null;
+      })
+      .addCase(deleteTemplateThunk.fulfilled, (state, action) => {
+        state.loading.deleteTemplateLoading = false;
+        state.deleteTemplateData = action.payload.data;
+      })
+      .addCase(deleteTemplateThunk.rejected, (state, action) => {
+        state.loading.deleteTemplateLoading = false;
         state.error = action.payload;
       });
   },

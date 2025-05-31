@@ -14,6 +14,6 @@ router.post('/add-template', authenticate, authorizeRoles('Admin'), createTempla
 // router.get('/', authenticate, getTemplates);
 router.post('/edit-template/', authenticate, authorizeRoles('Admin'), updateTemplate);
 router.get('/get-template/', authenticate, getTemplateById);
-router.delete('/delete-template/:templateName', authenticate, authorizeRoles('Admin'), deleteTemplate);
+router.post('/delete-template/', authenticate, authorizeRoles('Admin'), deleteTemplate);
 
 module.exports = router;

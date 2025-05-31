@@ -4,7 +4,15 @@ require("dotenv").config();
 const path = require("path");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-app.use(express.json());
+// app.use(express.json());
+app.use(express.json({
+  strict: true,
+  verify: (req, res, buf) => {
+    if (buf.length === 0) {
+      throw new Error('Empty body');
+    }
+  }
+}));
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 

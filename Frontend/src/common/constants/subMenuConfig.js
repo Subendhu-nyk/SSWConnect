@@ -456,12 +456,12 @@ export const subMenuConfig = [
     path: 'student/edit-template',
     requiredRole: ['admin'],
   },
-  // {
-  //   id: 'studentTemplate',
-  //   label: 'Delete Student Template',
-  //   path: 'students/delete-template',
-  //   requiredRole: ['admin'],
-  // },
+  {
+    id: 'studentTemplate',
+    label: 'Delete Student Template',
+    path: 'student/delete-template',
+    requiredRole: ['admin'],
+  },  
 
   // // TEACHERS
   {
@@ -476,12 +476,12 @@ export const subMenuConfig = [
     path: 'teacher/edit-template',
     requiredRole: ['admin'],
   },
-  // {
-  //   id: 'teacherTemplate',
-  //   label: 'Delete Teacher Template',
-  //   path: 'teachers/delete-template',
-  //   requiredRole: ['admin'],
-  // },
+  {
+    id: 'teacherTemplate',
+    label: 'Delete Teacher Template',
+    path: 'teacher/delete-template',
+    requiredRole: ['admin'],
+  },
 
   // // STAFF
   {
@@ -496,10 +496,10 @@ export const subMenuConfig = [
     path: 'staff/edit-template',
     requiredRole: ['admin'],
   },
-  // {
-  //   id: 'staffTemplate',
-  //   label: 'Delete Staff Template',
-  //   path: '/staff/delete-template',
-  //   requiredRole: ['admin'],
-  // },
+  {
+    id: 'staffTemplate',
+    label: 'Delete Staff Template',
+    path: 'staff/delete-template',
+    requiredRole: ['admin'],
+  },
 ];

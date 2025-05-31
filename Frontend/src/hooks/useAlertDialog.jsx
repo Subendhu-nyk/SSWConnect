@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import AlertDialog from '../common/AlertDilog/AlertDialog';
+import AlertDialog from '../common/AlertDialog/AlertDialog';
 
 const useAlertDialog = () => {
   const [dialogConfig, setDialogConfig] = useState({
