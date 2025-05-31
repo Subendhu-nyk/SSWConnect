@@ -4,8 +4,16 @@ const { Template } = require("../models");
 const createTemplate = async (req, res) => {
   try {
     const { templateName, fields, createdBy } = req.body;
+
+    if (!Array.isArray(fields) || fields.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Fields cannot be empty.',
+      });
+    }
+
      const existingTemplate = await Template.findOne({ where: { templateName } });
-     if (existingTemplate) {
+     if (existingTemplate && existingTemplate.fields.length > 0) {
       return res.status(409).json({
         success: false,
         message: 'Template with this name already exists.',

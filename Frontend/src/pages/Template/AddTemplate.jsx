@@ -118,6 +118,10 @@ const AddTemplate = () => {
 
   const handleGenerate = async () => {
     const selectedFields = fields.filter(f => f.selected);
+    if(selectedFields.length===0){     
+      alert("Please select fields")
+      return
+    }
 
     try {
       await downloadExcel(selectedFields); // 1. Download the template
@@ -243,16 +247,17 @@ const AddTemplate = () => {
                   <DeleteIcon color='error' />
                 </IconButton>
               </Box>
-            ))}
+            ))}          
           <Button
             variant='contained'
             fullWidth
             color='success'
+            disabled={!fields.some(f => f.selected)}
             onClick={handleGenerate}
             sx={{ mt: 2 }}
           >
             Generate Template
-          </Button>
+          </Button>        
         </Paper>
       </Grid>
     </Grid>
