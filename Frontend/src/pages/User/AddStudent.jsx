@@ -21,7 +21,7 @@ import { useState } from 'react';
 const AddTeacher = () => {
   const formType = 'studentForm';
   const config = accordionConfig[formType];
-  const [query, setQuery] = useState(''); 
+  const [query, setQuery] = useState('');
   // const dispatch = useDispatch();
   // const userData = useSelector(state => state);
 
@@ -112,65 +112,64 @@ const AddTeacher = () => {
 
   return (
     <>
-    <CommonFilter
-    title="Add Students"
-    onSearch={handleSearch}
-    showSearch={false}
-    showAdd={true}
-    showImport={true}
-    showDownloadTemplate={true}
-    showRefresh={true}
-    showRecycleBin={true}
-    onAdd={() => console.log('Add new')}
-    onImport={() => console.log('Import XLSX')}
-    onExport={() => console.log('Export')}
-    onDownloadTemplate={() => console.log('Download template')}
-    onRefresh={() => console.log('Refresh')}
-    onRecycleBin={() => console.log('To recycle bin')}
-    onPrint={() => window.print()}
-  />
-    <Formik
-      initialValues={initialValues}
-      // passing the default values object so Formik knows what each field starts with
-      validationSchema={validationSchema}
-      // attaching the Yup schema we just built to enable per-field validation
-      onSubmit={(values, actions) => {
-        console.log('error', actions.error);
-        handleSubmit(values, actions);
+      <CommonFilter
+        title='Add Students'
+        onSearch={handleSearch}
+        showSearch={false}
+        showAdd={true}
+        showImport={true}
+        showDownloadTemplate={true}
+        showRefresh={true}
+        showRecycleBin={true}
+        onAdd={() => console.log('Add new')}
+        onImport={() => console.log('Import XLSX')}
+        onExport={() => console.log('Export')}
+        onDownloadTemplate={() => console.log('Download template')}
+        onRefresh={() => console.log('Refresh')}
+        onRecycleBin={() => console.log('To recycle bin')}
+        onPrint={() => window.print()}
+      />
+      <Formik
+        initialValues={initialValues}
+        // passing the default values object so Formik knows what each field starts with
+        validationSchema={validationSchema}
+        // attaching the Yup schema we just built to enable per-field validation
+        onSubmit={(values, actions) => {
+          console.log('error', actions.error);
+          handleSubmit(values, actions);
 
-        // when Submit is clicked, Formik will call this with current form values + helpers like resetForm
-      }}
-      enableReinitialize
-      // allows the form to reset if initialValues change dynamically (useful for editing forms too)
-    >
-      {({ resetForm, errors, touched }) => {
-        // using Formik's render function to access form helpers like resetForm and validation states
-        console.log('error', errors);
-        return (
-          <Form>        
-            <Grid container spacing={2}>
-              {renderAccordionContent(config)}
-              <Grid item xs={12} container justifyContent='flex-end' spacing={2}>
-                <Grid item>
-                  <Button variant='contained' color='primary' type='submit'>
-                    Submit
-                    {/* triggers the Formik onSubmit when clicked, only works if all validation passes */}
-                  </Button>
-                </Grid>
-                <Grid item>
-                  <Button variant='outlined' color='error' onClick={() => resetForm()}>
-                    Cancel
-                    {/* clicking this calls resetForm() from Formik and clears everything */}
-                  </Button>
+          // when Submit is clicked, Formik will call this with current form values + helpers like resetForm
+        }}
+        enableReinitialize
+        // allows the form to reset if initialValues change dynamically (useful for editing forms too)
+      >
+        {({ resetForm, errors, touched }) => {
+          // using Formik's render function to access form helpers like resetForm and validation states
+          console.log('error', errors);
+          return (
+            <Form>
+              <Grid container spacing={2}>
+                {renderAccordionContent(config)}
+                <Grid item xs={12} container justifyContent='flex-end' spacing={2}>
+                  <Grid item>
+                    <Button variant='contained' color='primary' type='submit'>
+                      Submit
+                      {/* triggers the Formik onSubmit when clicked, only works if all validation passes */}
+                    </Button>
+                  </Grid>
+                  <Grid item>
+                    <Button variant='outlined' color='error' onClick={() => resetForm()}>
+                      Cancel
+                      {/* clicking this calls resetForm() from Formik and clears everything */}
+                    </Button>
+                  </Grid>
                 </Grid>
               </Grid>
-            </Grid>
-          </Form>
-        );
-      }}
-    </Formik>
+            </Form>
+          );
+        }}
+      </Formik>
     </>
-    
   );
 };
 

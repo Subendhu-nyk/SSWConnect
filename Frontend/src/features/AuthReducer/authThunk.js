@@ -3,11 +3,10 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import createApiThunk from '../../services/apiThunkHelper';
 // import { destination_BP } from '../../config/destinationVariableConfig';
 
-
 // 1. Login Authentication (POST)
 export const authenticateUserThunk = createAsyncThunk(
   'auth/authenticateUser',
-    createApiThunk('POST', `http://localhost:3000/auth/login`) 
+  createApiThunk('POST', `http://localhost:3000/auth/login`)
 );
 
 // 2. Get Role-Based Menus (POST, requires role in body)

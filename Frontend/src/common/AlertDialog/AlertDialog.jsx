@@ -106,7 +106,7 @@ AlertDialog.propTypes = {
   type: PropTypes.oneOf(['success', 'error', 'warning', 'info', 'address']).isRequired,
   onClose: PropTypes.func.isRequired,
   cancel: PropTypes.bool,
-  onCancel: PropTypes.func, 
+  onCancel: PropTypes.func,
 };
 
 export default AlertDialog;

@@ -25,14 +25,14 @@ import { useDispatch } from 'react-redux';
 const AddDepartment = () => {
   const formType = 'departmentForm';
   const config = accordionConfig[formType];
-  const dispatch = useDispatch() 
+  const dispatch = useDispatch();
   const handleSubmit = async (values, { resetForm }) => {
     try {
       const result = await dispatch(
         addDepartmentThunk({
-          payload: values, 
+          payload: values,
         })
-      );   
+      );
       resetForm(); // Clear the form on success
     } catch (error) {
       console.error('Error creating department:', error);

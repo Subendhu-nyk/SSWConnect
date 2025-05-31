@@ -73,17 +73,17 @@ const routesConfig = [
     component: AddTemplate,
     requiredRole: ['admin'],
   },
-    {
+  {
     path: 'student/edit-template',
     component: EditTemplate,
     requiredRole: ['admin'],
   },
-     {
+  {
     path: 'teacher/edit-template',
     component: EditTemplate,
     requiredRole: ['admin'],
   },
-     {
+  {
     path: 'staff/edit-template',
     component: EditTemplate,
     requiredRole: ['admin'],

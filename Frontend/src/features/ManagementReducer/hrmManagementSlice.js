@@ -14,7 +14,7 @@ const hrmManagementSlice = createSlice({
   name: 'hrmManagement',
   initialState: initialState,
   extraReducers: builder => {
-    builder      
+    builder
       .addCase(addDepartmentThunk.pending, state => {
         state.loading.addDepartmentLoading = true;
         state.error = null;

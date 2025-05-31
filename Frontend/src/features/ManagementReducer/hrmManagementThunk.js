@@ -8,6 +8,6 @@ export const addDepartmentThunk = createAsyncThunk(
 );
 
 export const addDesignationThunk = createAsyncThunk(
-    'user/addDesignation',
-    createApiThunk('POST', `http://localhost:3000/add-designation`)
-  );
+  'user/addDesignation',
+  createApiThunk('POST', `http://localhost:3000/add-designation`)
+);
