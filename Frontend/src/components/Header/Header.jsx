@@ -9,7 +9,7 @@ import {
   Tooltip,
   Avatar,
   FormControlLabel,
-  Switch,  
+  Switch,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
@@ -170,7 +170,9 @@ const Header = () => {
           >
             <Typography variant='h6' sx={{ whiteSpace: 'nowrap' }}>
               Welcome, {'SAM'}{' '}
-              <span style={{ color: theme.darkMode ? '#fff' : 'blue' }}>({capitalizeWords(user.role)})</span>
+              <span style={{ color: theme.darkMode ? '#fff' : 'blue' }}>
+                ({capitalizeWords(user.role)})
+              </span>
             </Typography>
             <Tooltip
               sx={{ marginLeft: '1px !important', marginRight: '1px !important' }}
@@ -252,7 +254,7 @@ const Header = () => {
           </Box>
         </Toolbar>
       </AppBar>
-      <UserProfile {...{ anchorEl, handleClose, onLogout,user }} />
+      <UserProfile {...{ anchorEl, handleClose, onLogout, user }} />
       <ApplicationSettings open={isDialogOpen} onClose={handleDialogClose} />
       <NotificationBar toggleDrawer={toggleDrawer} drawerOpen={drawerOpen} />
     </>

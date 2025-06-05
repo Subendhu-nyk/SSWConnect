@@ -1,28 +1,22 @@
 import { useState } from 'react';
-import AlertDialog from '../common/AlertDilog/AlertDialog';
+import AlertDialog from '../common/AlertDialog/AlertDialog';
 
 const useAlertDialog = () => {
   const [dialogConfig, setDialogConfig] = useState({
     open: false,
     type: 'info', // Default type
-    message: '',    
+    message: '',
     onConfirm: () => {},
-    onCancel: () => {},   
+    onCancel: () => {},
     cancel: true,
   });
 
-  const openDialog = ({
-    type,
-    message,    
-    onConfirm,
-    onCancel,
-    cancel = true,
-  }) => {
+  const openDialog = ({ type, message, onConfirm, onCancel, cancel = true }) => {
     setDialogConfig(prev => ({
       ...prev,
       open: true,
       type,
-      message,       
+      message,
       cancel,
       onConfirm: onConfirm || (() => {}),
       onCancel: onCancel || (() => setDialogConfig(prev => ({ ...prev, open: false }))),
@@ -33,7 +27,6 @@ const useAlertDialog = () => {
     setDialogConfig(prev => ({ ...prev, open: false }));
   };
 
-
   // Return the AlertDialog component and the openDialog function
   const AlertDialogComponent = () => (
     <AlertDialog
@@ -42,7 +35,7 @@ const useAlertDialog = () => {
       message={dialogConfig.message}
       onClose={closeDialog} // Handle closing the dialog (e.g., clicking outside or pressing Escape)
       onConfirm={dialogConfig.onConfirm} // Handle "OK" button click
-      onCancel={dialogConfig.onCancel} // Handle "Cancel" button click      
+      onCancel={dialogConfig.onCancel} // Handle "Cancel" button click
       cancel={dialogConfig.cancel}
     />
   );

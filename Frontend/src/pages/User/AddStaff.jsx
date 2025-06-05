@@ -113,7 +113,7 @@ const AddStaff = () => {
       );
 
       // On success, reset form and show success message
-      resetForm();     
+      resetForm();
     } catch (error) {
       // Handle errors and display in form
       console.error('Error creating staff:', error);

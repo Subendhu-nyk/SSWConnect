@@ -68,7 +68,7 @@ const authSlice = createSlice({
           window.location.href = '/login'; // or use navigate() if using react-router
           localStorage.removeItem('token');
           window.location.reload(); // force logout & re-init state
-        }, expiresIn * 1000);
+        }, expiresIn * 5000);
         state.token = token;
         decoded.role = decoded.role.toLowerCase();
         state.user = decoded;

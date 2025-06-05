@@ -1,11 +1,5 @@
 import { useState } from 'react';
-import {
-  Paper,
-  InputBase,
-  IconButton,
-  Tooltip,
-  Box,
-} from '@mui/material';
+import { Paper, InputBase, IconButton, Tooltip, Box } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
 

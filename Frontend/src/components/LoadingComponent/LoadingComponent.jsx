@@ -45,11 +45,7 @@ const LoadingComponent = () => {
               justifyContent: 'center',
             }}
           >
-            <img
-              src='fav.jpg'
-              alt='loading icon'
-              style={{ width: '28px' }} // Equivalent to w-7 (1.75rem = 28px)
-            />
+            <img src='fav.jpg' alt='loading icon' style={{ width: '28px' }} />
           </Box>
         </Box>
 

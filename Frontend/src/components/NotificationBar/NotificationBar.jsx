@@ -67,7 +67,7 @@ const notificationData = [
   },
 ];
 
-const NotificationBar = ({ drawerOpen, toggleDrawer}) => {
+const NotificationBar = ({ drawerOpen, toggleDrawer }) => {
   const [displayCount, setDisplayCount] = useState(15);
   const loadMore = e => {
     e.stopPropagation();

@@ -1,12 +1,5 @@
 import { useState } from 'react';
-import {
-  Box,
-  Typography,
-  Paper,
-  InputBase,
-  IconButton,
-  Tooltip,
-} from '@mui/material';
+import { Box, Typography, Paper, InputBase, IconButton, Tooltip } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
@@ -28,13 +21,14 @@ const CommonFilter = ({
   onRefresh,
   onRecycleBin,
   onPrint,
-  showAdd = true,
-  showImport = true,
-  showExport = true,
-  showDownloadTemplate = true,
-  showRefresh = true,
-  showRecycleBin = true,
-  showPrint = true,
+  showAdd = false,
+  showImport = false,
+  showExport = false,
+  showDownloadTemplate = false,
+  showRefresh = false,
+  showRecycleBin = false,
+  showPrint = false,
+  showSearch = false,
 }) => {
   const [searchText, setSearchText] = useState('');
 
@@ -77,35 +71,39 @@ const CommonFilter = ({
         }}
       >
         {/* Search Box */}
-        <Paper
-          component='form'
-          onSubmit={e => {
-            e.preventDefault();
-            handleSearch();
-          }}
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            height: 36,
-            px: 1,
-            borderRadius: 2,
-            backgroundColor: '#fff',
-            width: 250,
-          }}
-        >
-          <SearchIcon sx={{ color: '#888' }} />
-          <InputBase
-            placeholder='Search...'
-            value={searchText}
-            onChange={e => setSearchText(e.target.value)}
-            sx={{ ml: 1, flex: 1, fontSize: '0.9rem' }}
-          />
-          {searchText && (
-            <IconButton onClick={handleClear} size='small'>
-              <CloseIcon fontSize='small' />
-            </IconButton>
+        <Box sx={{ flex: 1 }}>
+          {showSearch && (
+            <Paper
+              component='form'
+              onSubmit={e => {
+                e.preventDefault();
+                handleSearch();
+              }}
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                height: 36,
+                px: 1,
+                borderRadius: 2,
+                backgroundColor: '#fff',
+                width: 250,
+              }}
+            >
+              <SearchIcon sx={{ color: '#888' }} />
+              <InputBase
+                placeholder='Search...'
+                value={searchText}
+                onChange={e => setSearchText(e.target.value)}
+                sx={{ ml: 1, flex: 1, fontSize: '0.9rem' }}
+              />
+              {searchText && (
+                <IconButton onClick={handleClear} size='small'>
+                  <CloseIcon fontSize='small' />
+                </IconButton>
+              )}
+            </Paper>
           )}
-        </Paper>
+        </Box>
 
         {/* Action Buttons */}
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>

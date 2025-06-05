@@ -51,6 +51,9 @@ const SidebarView = () => {
           'fees-report',
         ],
       },
+      {
+        Template_Management: ['studentTemplate', 'teacherTemplate', 'staffTemplate'],
+      },
     ],
     teacher: [
       { Main: ['dashboard'] },
@@ -148,7 +151,7 @@ const SidebarView = () => {
                       textTransform: 'uppercase',
                     }}
                   >
-                    {sectionTitle}
+                    {sectionTitle.replace(/_/g, ' ')}
                   </Typography>
 
                   <List disablePadding dense>

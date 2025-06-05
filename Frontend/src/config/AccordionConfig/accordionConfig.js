@@ -106,7 +106,7 @@ export const accordionConfig = {
     },
     {
       sectionName: 'Professional Details',
-      fields: extractFields(StudentDetailFields, ['department', 'roles', 'isActive']),
+      fields: extractFields(StudentDetailFields, ['department', 'roles', 'Year', 'isActive']),
     },
     {
       sectionName: 'Educational Details',

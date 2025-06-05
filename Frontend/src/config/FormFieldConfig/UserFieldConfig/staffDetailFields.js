@@ -210,7 +210,7 @@ export const StaffDetailFields = [
     required: false,
     multiple: true,
     accept: 'application/pdf',
-  }, 
+  },
   {
     type: 'text',
     name: 'designation',

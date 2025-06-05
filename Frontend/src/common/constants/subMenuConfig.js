@@ -443,4 +443,63 @@ export const subMenuConfig = [
     path: 'report/fees',
     requiredRole: ['admin', 'staff'],
   },
+  // STUDENTS
+  {
+    id: 'studentTemplate',
+    label: 'Add Student Template',
+    path: 'student/add-template',
+    requiredRole: ['admin'],
+  },
+  {
+    id: 'studentTemplate',
+    label: 'Edit Student Template',
+    path: 'student/edit-template',
+    requiredRole: ['admin'],
+  },
+  {
+    id: 'studentTemplate',
+    label: 'Delete Student Template',
+    path: 'student/delete-template',
+    requiredRole: ['admin'],
+  },  
+
+  // // TEACHERS
+  {
+    id: 'teacherTemplate',
+    label: 'Add Teacher Template',
+    path: 'teacher/add-template',
+    requiredRole: ['admin'],
+  },
+  {
+    id: 'teacherTemplate',
+    label: 'Edit Teacher Template',
+    path: 'teacher/edit-template',
+    requiredRole: ['admin'],
+  },
+  {
+    id: 'teacherTemplate',
+    label: 'Delete Teacher Template',
+    path: 'teacher/delete-template',
+    requiredRole: ['admin'],
+  },
+
+  // // STAFF
+  {
+    id: 'staffTemplate',
+    label: 'Add Staff Template',
+    path: 'staff/add-template',
+    requiredRole: ['admin'],
+  },
+  {
+    id: 'staffTemplate',
+    label: 'Edit Staff Template',
+    path: 'staff/edit-template',
+    requiredRole: ['admin'],
+  },
+  {
+    id: 'staffTemplate',
+    label: 'Delete Staff Template',
+    path: 'staff/delete-template',
+    requiredRole: ['admin'],
+  },
 ];
