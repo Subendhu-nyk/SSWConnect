@@ -1,3 +1,4 @@
+import { AttendanceDetailFields } from '../FormFieldConfig/AttendanceFieldConfig/attendanceDetailFields';
 import { DepartmentDetailFields } from '../FormFieldConfig/DepartmentFieldConfig/departmentDetailFields';
 import { DesignationDetailFields } from '../FormFieldConfig/DesignationFieldConfig/designationDetailField';
 import { StaffDetailFields } from '../FormFieldConfig/UserFieldConfig/staffDetailFields';
@@ -106,7 +107,13 @@ export const accordionConfig = {
     },
     {
       sectionName: 'Professional Details',
-      fields: extractFields(StudentDetailFields, ['department', 'roles', 'Year', 'isActive']),
+      fields: extractFields(StudentDetailFields, [
+        'department',
+        'roles',
+        'year',
+        'section',
+        'isActive',
+      ]),
     },
     {
       sectionName: 'Educational Details',
@@ -165,6 +172,12 @@ export const accordionConfig = {
     {
       sectionName: 'Media',
       fields: extractFields(TeacherDetailFields, ['uploadPhoto']),
+    },
+  ],
+  attendanceForm: [
+    {
+      sectionName: 'Attendance Details',
+      fields: AttendanceDetailFields,
     },
   ],
 };

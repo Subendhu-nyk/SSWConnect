@@ -8,6 +8,14 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    year: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    section: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     fatherMobileNo: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -23,6 +31,7 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   StudentProfile.associate = (models) => {
+    console.log("models----",models.User)
      // This adds user_id FK to StudentProfile and links it to User.user_id
     StudentProfile.belongsTo(models.User, {
       foreignKey: {

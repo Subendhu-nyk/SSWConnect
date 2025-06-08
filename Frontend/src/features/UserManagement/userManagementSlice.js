@@ -1,11 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { addUserThunk } from './userManagementThunk';
+import { addBulkUsersThunk, addUserThunk, getUserThunk } from './userManagementThunk';
 
 const initialState = {
   addStaffData: null,
+  addBulkUsersData: null,
+  getUserDetails: [],
   error: null,
   loading: {
     addStaffLoading: false,
+    addBulkUsersLoading: false,
+    getUserDetailsLoading: false,
   },
 };
 const userManagementSlice = createSlice({
@@ -24,6 +28,30 @@ const userManagementSlice = createSlice({
       })
       .addCase(addUserThunk.rejected, (state, action) => {
         state.loading.addStaffLoading = false;
+        state.error = action.payload;
+      })
+      .addCase(addBulkUsersThunk.pending, state => {
+        state.loading.addBulkUsersLoading = true;
+        state.error = null;
+      })
+      .addCase(addBulkUsersThunk.fulfilled, (state, action) => {
+        state.loading.addBulkUsersLoading = false;
+        state.addBulkUsersData = action.payload.data;
+      })
+      .addCase(getUserThunk.rejected, (state, action) => {
+        state.loading.addBulkUsersLoading = false;
+        state.error = action.payload;
+      })
+      .addCase(getUserThunk.pending, state => {
+        state.loading.getUserDetailsLoading = true;
+        state.error = null;
+      })
+      .addCase(getUserThunk.fulfilled, (state, action) => {
+        state.loading.getUserDetailsLoading = false;
+        state.getUserDetails = action.payload.data;
+      })
+      .addCase(addBulkUsersThunk.rejected, (state, action) => {
+        state.loading.getUserDetailsLoading = false;
         state.error = action.payload;
       });
   },

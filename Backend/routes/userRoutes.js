@@ -13,7 +13,7 @@ router.post("/auth/login", userController.userLogin);
 
 //Route to add a staff member
 router.post(
-  "/add/staff",
+  "/add/User",
   // This middleware tells multer to expect:
   // - 1 file under "uploadPhoto"
   // - up to 5 files under "educationDocument"
@@ -28,6 +28,8 @@ router.post(
   // After files are parsed, control goes to the controller
   userController.addUser
 );
+
+router.post('/user/by-filters', userController.getStudentsByFilters);
 
 router.get(
   "/download/:userId/:filename",

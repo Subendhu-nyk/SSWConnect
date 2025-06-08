@@ -251,6 +251,12 @@ export const subMenuConfig = [
     path: 'all/attendance',
     requiredRole: ['admin', 'teacher', 'staff'],
   },
+    {
+    id: 'attendance',
+    label: 'Add Attendance',
+    path: 'add/attendance',
+    requiredRole: ['admin', 'teacher', 'staff'],
+  },
   {
     id: 'attendance',
     label: 'Edit Attendance',

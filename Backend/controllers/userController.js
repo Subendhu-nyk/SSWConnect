@@ -12,6 +12,7 @@ const {
   UserDocuments,
 } = require("../models");
 const { generateStoredFilename } = require("../util/fileHelper");
+const { sanitizeExcelData } = require("../util/sanitizeExcelData");
 
 // Returns correct MIME type based on file extension
 function getMimeType(filePath) {
@@ -26,6 +27,103 @@ function getMimeType(filePath) {
 }
 
 const addUser = async (req, res) => {
+  // ==============================
+  // 📥 BULK EXCEL UPLOAD HANDLING
+  // ==============================
+  if (Array.isArray(req.body)) {
+    const cleanData = sanitizeExcelData(req.body);
+    console.log("cleanData>>>>>>",cleanData)
+    try {      
+      // const userData = req.body;
+      // 1️⃣ Prepare users with hashed passwords
+      const usersToCreate = await Promise.all(
+        cleanData.map(async (item) => {
+          if (!item.password) {
+            throw new Error(`Missing password for user_id: ${item.user_id}`);
+          }
+
+          if (!item.fatherMobileNo && item.roles === "Student") {
+            throw new Error(`Missing fatherMobileNo for ${item.user_id}`);
+          }
+
+          return {
+            user_id: item.user_id,
+            firstName: item.firstName,
+            lastName: item.lastName,
+            displayName: item.displayName || "",
+            emailId: item.emailId,
+            alternateEmailID: item.alternateEmailID || "",
+            dob: item.dob,
+            gender: item.gender,
+            phoneNumber: item.phoneNumber,
+            password: await bcrypt.hash(item.password, 20),
+            bloodGroup: item.bloodGroup || "",
+            address: item.address,
+            uploadPhoto: null,
+            state: item.state,
+            city: item.city || "",
+            pinCode: item.pinCode,
+            department: item.department || "",
+            roles: item.roles,
+            isActive: item.isActive,
+          };
+        })
+      );
+
+      // 2️⃣ Insert Users in one go
+      await User.bulkCreate(usersToCreate);
+
+      // 3️⃣ Prepare and insert role-specific profiles
+      const studentProfiles = [];
+      const staffProfiles = [];
+      const teacherProfiles = [];
+
+      for (const item of cleanData) {
+        const base = { user_id: item.user_id };
+        console.log("item>>", item)
+        if (item.roles === "Student") {
+          studentProfiles.push({
+            ...base,
+            registrationDate: item.registrationDate,
+            fatherName: item.fatherName,
+            fatherMobileNo: item.fatherMobileNo,
+            year: item.year,
+            section: item.section,
+            education: JSON.stringify(item.education),
+          });
+        } else if (item.roles === "Staff") {
+          staffProfiles.push({
+            ...base,
+            designation: item.designation,
+            experience: item.experience,
+            education: JSON.stringify(item.education),
+          });
+        } else if (item.roles === "Teacher") {
+          teacherProfiles.push({
+            ...base,
+            designation: item.designation,
+            experience: item.experience,
+            joiningDate: item.joiningDate,
+            education: JSON.stringify(item.education),
+          });
+        }
+      }
+console.log("studentProfiles to be inserted =>", studentProfiles);
+      if (studentProfiles.length > 0)
+        await StudentProfile.bulkCreate(studentProfiles);
+      if (staffProfiles.length > 0)
+        await StaffProfile.bulkCreate(staffProfiles);
+      if (teacherProfiles.length > 0)
+        await TeacherProfile.bulkCreate(teacherProfiles);
+      return res.status(201).json({
+        message: "Bulk users added successfully",
+      });
+    } catch (error) {
+      console.error("Bulk insert error:", error);
+      return res.status(500).json({ message: "Bulk insert failed", error });
+    }
+  }
+
   const t = await sequelize.transaction(); // Begin DB transaction
 
   try {
@@ -53,6 +151,10 @@ const addUser = async (req, res) => {
       roles,
       joiningDate,
       registrationDate,
+      fatherMobileNumber,
+      fatherName,
+      year,
+      section
     } = req.body;
 
     //  Validate that all required fields are present
@@ -61,10 +163,10 @@ const addUser = async (req, res) => {
       !firstName ||
       !lastName ||
       !emailId ||
-      !password ||
-      !designation ||
-      !education ||
-      !experience
+      !password
+      // !designation ||
+      // !education ||
+      // !experience
     ) {
       return res.status(400).json({ message: "Required fields missing" });
     }
@@ -125,9 +227,8 @@ const addUser = async (req, res) => {
         city,
         pinCode,
         department,
-        designation,
         roles,
-        isActive: true,
+        isActive,
       },
       { transaction: t }
     ); // 🔁 use transaction
@@ -206,8 +307,12 @@ const addUser = async (req, res) => {
     } else if (roles === "Student") {
       studentProfile = await StudentProfile.create(
         {
+          fatherMobileNo: fatherMobileNumber,
+          fatherName: fatherName,
           education: JSON.stringify(education),
           registrationDate,
+          year,
+          section,
           user_id: user.user_id,
         },
         { transaction: t }
@@ -475,9 +580,58 @@ const userLogin = async (req, res) => {
   }
 };
 
+const getStudentsByFilters = async (req, res) => {
+  try {
+    console.log("attendance data", req.body);
+    const { department, year, section } = req.body;
+
+    if (!department || !year) {
+      return res.status(400).json({ message: "Missing required filters" });
+    }
+
+    const students = await User.findAll({
+      where: {
+        department,
+        roles: "Student",
+        isActive: true,
+      },
+      include: [
+        {
+          model: StudentProfile,
+          where: { year, section },
+          attributes: { exclude: ["id", "createdAt", "updatedAt"] },
+        },
+      ],
+      attributes: {
+        exclude: ["password", "createdAt", "updatedAt"],
+      },
+    });
+
+    const response = students.map((student) => {
+      const profile = student.StudentProfile || {};
+      return {
+        userId: student.user_id,
+        name: `${student.firstName}`,
+        email: student.emailId,
+        gender: student.gender,
+        department: student.department,
+        year: profile.year,
+        section: profile.section,        
+      };
+    });
+
+    console.log("response>>>>", response);
+    return res.status(200).json(response);
+  } catch (error) {
+    console.error("Error fetching students:", error);
+    res.status(500).json({ message: "Internal server error", error });
+  }
+};
+
 // Export the controller functions
 module.exports = {
   addUser,
   downloadDocument,
   userLogin,
+  getStudentsByFilters,
 };

@@ -1,19 +1,26 @@
 import { ThemeProvider } from '@mui/material';
 import MainRouter from './routes/Router';
 import theme from './styles/theme';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/lib/integration/react.js';
 import { store, persistor } from './store/store.js';
 import ToastProvider from './common/Toast/ToastProvider.jsx';
+import { useEffect } from 'react';
+import { getDepartmentThunk } from './features/ManagementReducer/hrmManagementThunk.js';
 
 const Config = () => {
+  const dispatch = useDispatch();
   // const environment = window.location.hostname;
   // const [isServerDown, setIsServerDown] = useState(false);
   // const [isInValiduser, setIsInvalidUser] = useState(false);
 
   const isDarkMode = useSelector(state => state.theme.darkMode);
+
+  useEffect(() => {
+    dispatch(getDepartmentThunk({ payload: null }));
+  }, [dispatch]);
 
   // const userDataa = useSelector(state => state.userManagement);
 
