@@ -9,6 +9,8 @@ import {
 // imported MUI components to structure the layout, show labels, and create form buttons.
 
 import { ExpandMoreOutlined } from '@mui/icons-material';
+import { saveAs } from 'file-saver';
+import ExcelJS from 'exceljs';
 
 import CommonTextFields from '../../common/TextFields/CommonTextFields';
 // using this to dynamically render form fields like text, select, autocomplete etc. with minimal code.
@@ -20,59 +22,44 @@ import { accordionConfig } from '../../config/AccordionConfig/accordionConfig';
 import { generateInitialValues } from '../../config/generateInitialValues';
 import { useDispatch, useSelector } from 'react-redux';
 import { addUserThunk } from '../../features/UserManagement/userManagementThunk';
+import { handleExcelUpload } from '../../utils/commonFunction/commonFunction';
+import CommonFilter from '../../common/CommonFilter/CommonFilter';
+import { StaffDetailFields } from '../../config/FormFieldConfig/UserFieldConfig/staffDetailFields';
+import { useMemo } from 'react';
 // using Formik to handle all form state, validations, and submit logic in a controlled way.
 
 const AddStaff = () => {
   const formType = 'staffForm';
   const config = accordionConfig[formType];
   const dispatch = useDispatch();
-  //Loads the corresponding field sections for 'departmentForm'.
-  // const handleSubmit = async (values, { resetForm }) => {
-  //   // dispatch(addStaffThunk({payload:'formData'}))
-  //   // whenever form is submitted, logging all values and resetting the form to initial state.
-  //   try {
-  //     // Create FormData object to hold all form fields and files
-  //     const formData = new FormData();
+  const departmentData=useSelector(state=>state?.hrmManagement?.getDepartmentData)
 
-  //     // === Append all regular fields (text inputs) ===
-  //     Object.entries(values).forEach(([key, value]) => {
-  //       if (key !== 'uploadPhoto' && key !== 'educationDocument') {
-  //         formData.append(key, value);
-  //       }
-  //     });
+  const dynamicConfig = useMemo(() => {
+  if (!departmentData) return accordionConfig[formType];
 
-  //     // === Handle single file: uploadPhoto ===
-  //     if (values.uploadPhoto instanceof File) {
-  //       formData.append('uploadPhoto', values.uploadPhoto);
-  //     }
+  return accordionConfig[formType].map(section => {
+    if (section.sectionName === 'Professional Details') {
+      return {
+        ...section,
+        fields: section.fields.map(field => {
+          if (field.name === 'department') {
+            return {
+              ...field,
+              options: departmentData.map(dept => ({
+                label: dept.departmentCode, // adapt to your actual object keys
+                value: dept.departmentCode, // use a unique value
+              })),
+            };
+          }
+          return field;
+        }),
+      };
+    }
+    return section;
+  });
+}, [departmentData]);
 
-  //     // === Handle multiple files: educationDocument ===
-  //     if (Array.isArray(values.educationDocument)) {
-  //       values.educationDocument.forEach(file => {
-  //         if (file instanceof File) {
-  //           formData.append('educationDocument', file); // ✔️ backend receives as array
-  //         }
-  //       });
-  //     }
 
-  //     // === Make the POST request ===
-  //     // const response = await fetch('/api/staff/add/staff', {
-  //     //   method: 'POST',
-  //     //   // headers: { Authorization: `Bearer ${token}` }, // 🔐 Add later if needed
-  //     //   body: formData,
-  //     // });
-  //     const response = await dispatch(addStaffThunk({ payload: formData }));
-
-  //     if (!response.ok) {
-  //       console.log( 'Failed to create staff');
-  //     }
-
-  //     // ✅ Success – reset form and show message
-  //     resetForm();
-  //   } catch (error) {
-  //     console.error('Error creating staff:', error);
-  //   }
-  // };
 
   const handleSubmit = async (values, { resetForm }) => {
     try {
@@ -100,11 +87,6 @@ const AddStaff = () => {
         }
       });
 
-      // Log FormData entries for debugging
-      // for (let [key, value] of formData.entries()) {
-      //   console.log(`${key}:`, value);
-      // }
-
       // Dispatch addStaffThunk with FormData and headers
       const result = await dispatch(
         addUserThunk({
@@ -120,8 +102,8 @@ const AddStaff = () => {
     }
   };
 
-  const initialValues = generateInitialValues(config);
-  const validationSchema = generateValidationSchema(config);
+  const initialValues = generateInitialValues(dynamicConfig);
+  const validationSchema = generateValidationSchema(dynamicConfig);
 
   const renderAccordionContent = config => {
     return config.map(section => (
@@ -166,50 +148,129 @@ const AddStaff = () => {
     ));
   };
 
-  return (
-    <Formik
-      initialValues={initialValues}
-      // passing the default values object so Formik knows what each field starts with
-      validationSchema={validationSchema}
-      // attaching the Yup schema we just built to enable per-field validation
-      onSubmit={(values, actions) => {
-        console.log('error', actions.error);
-        handleSubmit(values, actions);
+  const onDownloadTemplate = async () => {
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('Staff Fields');
+    // Add header row
+    const headerRow = worksheet.getRow(1);
+    StaffDetailFields.forEach((field, index) => {
+      const cell = headerRow.getCell(index + 1);
+      cell.value = field.label;
+      // Apply red font for required fields
+      cell.font = {
+        color: field.required ? { argb: 'FFFF0000' } : { argb: 'FF000000' },
+        bold: true,
+      };
+      // Optional: auto size
+      worksheet.getColumn(index + 1).width = Math.max(field.label.length + 5, 20);
+    });
+    headerRow.commit();
+    // Add data validation for dropdown fields for first 10 rows
+    StaffDetailFields.forEach((field, colIdx) => {
+      if (
+        (field.type === 'dropdown' || field.type === 'multiselect') &&
+        Array.isArray(field.options) &&
+        field.options.length > 0
+      ) {
+        const list = field.options.map(opt => opt.label).join(',');
+        for (let row = 2; row <= 1000; row++) {
+          worksheet.getCell(row, colIdx + 1).dataValidation = {
+            type: 'list',
+            allowBlank: !field.required,
+            formulae: [`"${list}"`],
+            showErrorMessage: true,
+            errorStyle: 'warning',
+            errorTitle: 'Invalid Input',
+            error: 'Please select a value from the dropdown list.',
+          };
+        }
+      }
+    });
+    // Create buffer and trigger download
+    const buffer = await workbook.xlsx.writeBuffer();
+    const blob = new Blob([buffer], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    });
+    saveAs(blob, 'StaffDetailFields.xlsx');
+  };
 
-        // when Submit is clicked, Formik will call this with current form values + helpers like resetForm
-      }}
-      enableReinitialize
-      // allows the form to reset if initialValues change dynamically (useful for editing forms too)
-    >
-      {({ resetForm, errors, touched }) => {
-        // using Formik's render function to access form helpers like resetForm and validation states
-        console.log('error', errors);
-        return (
-          <Form>
-            <Typography variant='h6' gutterBottom>
-              Add Staff
-            </Typography>
-            <Grid container spacing={2}>
-              {renderAccordionContent(config)}
-              <Grid item xs={12} container justifyContent='flex-end' spacing={2}>
-                <Grid item>
-                  <Button variant='contained' color='primary' type='submit'>
-                    Submit
-                    {/* triggers the Formik onSubmit when clicked, only works if all validation passes */}
-                  </Button>
-                </Grid>
-                <Grid item>
-                  <Button variant='outlined' color='error' onClick={() => resetForm()}>
-                    Cancel
-                    {/* clicking this calls resetForm() from Formik and clears everything */}
-                  </Button>
+  const handleExcelDataUpload = () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.xlsx, .xls';
+    input.onchange = async e => {
+      const file = e.target.files[0];
+      if (!file) return;
+      await handleExcelUpload(
+        file,
+        data => dispatch(addUserThunk({ payload: data })),
+        () => alert('Bulk upload successful!'),
+        err => alert('Bulk upload failed: ' + err.message)
+      );
+    };
+    input.click();
+  };
+
+  return (
+    <>
+      <CommonFilter
+        title='Add Staff'
+        onSearch={false}
+        showSearch={false}
+        showAdd={true}
+        showImport={true}
+        showDownloadTemplate={true}
+        showRefresh={true}
+        showRecycleBin={true}
+        onAdd={() => console.log('Add new')}
+        onImport={handleExcelDataUpload}
+        onExport={() => console.log('Export')}
+        onDownloadTemplate={onDownloadTemplate}
+        onRefresh={() => console.log('Refresh')}
+        onRecycleBin={() => console.log('To recycle bin')}
+        onPrint={() => window.print()}
+      />
+      <Formik
+        initialValues={initialValues}
+        // passing the default values object so Formik knows what each field starts with
+        validationSchema={validationSchema}
+        // attaching the Yup schema we just built to enable per-field validation
+        onSubmit={(values, actions) => {
+          console.log('error', actions.error);
+          handleSubmit(values, actions);
+
+          // when Submit is clicked, Formik will call this with current form values + helpers like resetForm
+        }}
+        enableReinitialize
+        // allows the form to reset if initialValues change dynamically (useful for editing forms too)
+      >
+        {({ resetForm, errors, touched }) => {
+          // using Formik's render function to access form helpers like resetForm and validation states
+          console.log('error', errors);
+          return (
+            <Form>
+              <Grid container spacing={2}>
+                {renderAccordionContent(dynamicConfig)}
+                <Grid item xs={12} container justifyContent='flex-end' spacing={2}>
+                  <Grid item>
+                    <Button variant='contained' color='primary' type='submit'>
+                      Submit
+                      {/* triggers the Formik onSubmit when clicked, only works if all validation passes */}
+                    </Button>
+                  </Grid>
+                  <Grid item>
+                    <Button variant='outlined' color='error' onClick={() => resetForm()}>
+                      Cancel
+                      {/* clicking this calls resetForm() from Formik and clears everything */}
+                    </Button>
+                  </Grid>
                 </Grid>
               </Grid>
-            </Grid>
-          </Form>
-        );
-      }}
-    </Formik>
+            </Form>
+          );
+        }}
+      </Formik>
+    </>
   );
 };
 

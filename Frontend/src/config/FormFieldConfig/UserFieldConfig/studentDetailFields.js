@@ -172,7 +172,7 @@ export const StudentDetailFields = [
   },
   {
     type: 'dropdown',
-    name: 'Year',
+    name: 'year',
     label: 'Year',
     placeholder: 'Select Year',
     required: true,
@@ -181,6 +181,18 @@ export const StudentDetailFields = [
       { label: '2nd Year', value: '2nd Year' },
       { label: '3rd Year', value: '3rd Year' },
       { label: '4th Year', value: '4th Year' },
+    ],
+  },
+  {
+    type: 'dropdown',
+    name: 'section',
+    label: 'Section',
+    placeholder: 'Select Section',
+    required: true,
+    options: [
+      { label: 'A', value: 'A' },
+      { label: 'B', value: 'B' },
+      { label: 'C', value: 'C' },
     ],
   },
   {

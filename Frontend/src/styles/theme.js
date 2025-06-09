@@ -47,9 +47,14 @@ const theme = darkMode =>
         lineHeight: 1.5,
         color: darkMode ? '#000' : '#333333',
       },
-      h2: {},
+      h2: {
+        fontSize: '2.25rem',
+        fontWeight: 700,
+        lineHeight: 1.5,
+        color: darkMode ? '#000' : '#333333',
+      },
       h3: {
-        fontSize: '20px',
+        fontSize: '2.00rem',
         fontWeight: 700,
         lineHeight: 1.4,
         color: darkMode ? '#cccccc' : '#000',

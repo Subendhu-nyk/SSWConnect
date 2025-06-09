@@ -10,7 +10,7 @@ const {
   deleteDepartment,
 } = require('../controllers/departmentController');
 
-router.get('/', authenticate, viewDepartments); 
+router.get('/get-department', authenticate, viewDepartments); 
 router.post('/add-department', authenticate, authorizeRoles('Admin'), addDepartment); 
 router.put('edit-department/:id', authenticate, authorizeRoles('Admin', 'Staff'), updateDepartment); 
 router.delete('delete-department/:id', authenticate, authorizeRoles('Admin'), deleteDepartment); 

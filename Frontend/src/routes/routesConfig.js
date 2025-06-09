@@ -11,6 +11,7 @@ const AddTeacher = lazy(() => import('../pages/User/AddTeacher'));
 const AddTemplate = lazy(() => import('../pages/Template/AddTemplate'));
 const EditTemplate = lazy(() => import('../pages/Template/EditTemplate'));
 const DeleteTemplate = lazy(() => import('../pages/Template/DeleteTemplate'));
+const AddAttendance = lazy(() => import('../pages/Attendance/AddAttendance'));
 
 const routesConfig = [
   {
@@ -103,5 +104,11 @@ const routesConfig = [
     component: DeleteTemplate,
     requiredRole: ['admin'],
   },
+   {
+    path: '/add/attendance',
+    component: AddAttendance,
+    requiredRole: ['admin', 'teacher', 'staff'],
+  },
+  
 ];
 export default routesConfig;

@@ -8,26 +8,66 @@ import {
   AccordionDetails,
 } from '@mui/material';
 import { ExpandMoreOutlined } from '@mui/icons-material';
+import { saveAs } from 'file-saver';
+import ExcelJS from 'exceljs';
 
 import CommonTextFields from '../../common/TextFields/CommonTextFields';
 import generateValidationSchema from '../../utils/validation/generateValidationSchema';
 import { accordionConfig } from '../../config/AccordionConfig/accordionConfig';
 import { generateInitialValues } from '../../config/generateInitialValues';
 import CommonFilter from '../../common/CommonFilter/CommonFilter';
-import { useState } from 'react';
-// import { useDispatch, useSelector } from 'react-redux';
-// import { addUserThunk } from '../../features/UserManagement/userManagementThunk';
+import { StudentDetailFields } from '../../config/FormFieldConfig/UserFieldConfig/studentDetailFields';
+import { useDispatch, useSelector } from 'react-redux';
+import { addUserThunk } from '../../features/UserManagement/userManagementThunk';
+import { handleExcelUpload } from '../../utils/commonFunction/commonFunction';
+import { useMemo } from 'react';
 
-const AddTeacher = () => {
+const AddStudent = () => {
   const formType = 'studentForm';
   const config = accordionConfig[formType];
-  const [query, setQuery] = useState('');
-  // const dispatch = useDispatch();
-  // const userData = useSelector(state => state);
+  const dispatch = useDispatch();
+   const departmentData=useSelector(state=>state?.hrmManagement?.getDepartmentData)  
+  // const location = useLocation();
+  // const pathSegments = location.pathname.split('/').filter(Boolean); // ['', 'students', 'add-template']
+  // const userType = pathSegments[1];
 
-  const handleSearch = searchKey => {
-    setQuery(searchKey); // save search term
-  };
+  // const getTemplateJson = type => {
+  //     switch (type) {
+  //       case 'student':
+  //         return StudentDetailFields;
+  //       case 'teacher':
+  //         return TeacherDetailFields;
+  //       case 'staff':
+  //         return StaffDetailFields;
+  //       default:
+  //         return [];
+  //     }
+  //   };
+
+    const dynamicConfig = useMemo(() => {
+  if (!departmentData) return accordionConfig[formType];
+
+  return accordionConfig[formType].map(section => {
+    if (section.sectionName === 'Professional Details') {
+      return {
+        ...section,
+        fields: section.fields.map(field => {
+          if (field.name === 'department') {
+            return {
+              ...field,
+              options: departmentData.map(dept => ({
+                label: dept.departmentCode, // adapt to your actual object keys
+                value: dept.departmentCode, // use a unique value
+              })),
+            };
+          }
+          return field;
+        }),
+      };
+    }
+    return section;
+  });
+}, [departmentData]);
 
   const handleSubmit = async (values, { resetForm }) => {
     try {
@@ -51,11 +91,11 @@ const AddTeacher = () => {
       });
 
       // Dispatch addStaffThunk with FormData and headers
-      // const result = await dispatch(
-      //   addUserThunk({
-      //     payload: formData, // Changed from 'data' to 'payload' to match createApiThunk
-      //   })
-      // );
+      const result = await dispatch(
+        addUserThunk({
+          payload: formData, // Changed from 'data' to 'payload' to match createApiThunk
+        })
+      );
 
       resetForm();
     } catch (error) {
@@ -64,8 +104,8 @@ const AddTeacher = () => {
     }
   };
 
-  const initialValues = generateInitialValues(config);
-  const validationSchema = generateValidationSchema(config);
+  const initialValues = generateInitialValues(dynamicConfig);
+  const validationSchema = generateValidationSchema(dynamicConfig);
 
   const renderAccordionContent = config => {
     return config.map(section => (
@@ -110,11 +150,73 @@ const AddTeacher = () => {
     ));
   };
 
+  const onDownloadTemplate = async () => {
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('Student Fields');
+    // Add header row
+    const headerRow = worksheet.getRow(1);
+    StudentDetailFields.forEach((field, index) => {
+      const cell = headerRow.getCell(index + 1);
+      cell.value = field.label;
+      // Apply red font for required fields
+      cell.font = {
+        color: field.required ? { argb: 'FFFF0000' } : { argb: 'FF000000' },
+        bold: true,
+      };
+      // Optional: auto size
+      worksheet.getColumn(index + 1).width = Math.max(field.label.length + 5, 20);
+    });
+    headerRow.commit();
+    // Add data validation for dropdown fields for first 10 rows
+    StudentDetailFields.forEach((field, colIdx) => {
+      if (
+        (field.type === 'dropdown' || field.type === 'multiselect') &&
+        Array.isArray(field.options) &&
+        field.options.length > 0
+      ) {
+        const list = field.options.map(opt => opt.label).join(',');
+        for (let row = 2; row <= 1000; row++) {
+          worksheet.getCell(row, colIdx + 1).dataValidation = {
+            type: 'list',
+            allowBlank: !field.required,
+            formulae: [`"${list}"`],
+            showErrorMessage: true,
+            errorStyle: 'warning',
+            errorTitle: 'Invalid Input',
+            error: 'Please select a value from the dropdown list.',
+          };
+        }
+      }
+    });
+    // Create buffer and trigger download
+    const buffer = await workbook.xlsx.writeBuffer();
+    const blob = new Blob([buffer], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    });
+    saveAs(blob, 'StudentDetailFields.xlsx');
+  };
+
+  const handleExcelDataUpload = () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.xlsx, .xls';
+    input.onchange = async e => {
+      const file = e.target.files[0];
+      if (!file) return;
+      await handleExcelUpload(
+        file,
+        data => dispatch(addUserThunk({ payload: data })),
+        () => alert('Bulk upload successful!'),        
+      );
+    };
+    input.click();
+  };
+
   return (
     <>
       <CommonFilter
         title='Add Students'
-        onSearch={handleSearch}
+        onSearch={false}
         showSearch={false}
         showAdd={true}
         showImport={true}
@@ -122,9 +224,9 @@ const AddTeacher = () => {
         showRefresh={true}
         showRecycleBin={true}
         onAdd={() => console.log('Add new')}
-        onImport={() => console.log('Import XLSX')}
+        onImport={handleExcelDataUpload}
         onExport={() => console.log('Export')}
-        onDownloadTemplate={() => console.log('Download template')}
+        onDownloadTemplate={onDownloadTemplate}
         onRefresh={() => console.log('Refresh')}
         onRecycleBin={() => console.log('To recycle bin')}
         onPrint={() => window.print()}
@@ -135,7 +237,6 @@ const AddTeacher = () => {
         validationSchema={validationSchema}
         // attaching the Yup schema we just built to enable per-field validation
         onSubmit={(values, actions) => {
-          console.log('error', actions.error);
           handleSubmit(values, actions);
 
           // when Submit is clicked, Formik will call this with current form values + helpers like resetForm
@@ -149,7 +250,7 @@ const AddTeacher = () => {
           return (
             <Form>
               <Grid container spacing={2}>
-                {renderAccordionContent(config)}
+                {renderAccordionContent(dynamicConfig)}
                 <Grid item xs={12} container justifyContent='flex-end' spacing={2}>
                   <Grid item>
                     <Button variant='contained' color='primary' type='submit'>
@@ -173,4 +274,4 @@ const AddTeacher = () => {
   );
 };
 
-export default AddTeacher;
+export default AddStudent;

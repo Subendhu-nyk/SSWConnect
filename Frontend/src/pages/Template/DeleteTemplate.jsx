@@ -49,31 +49,6 @@ const DeleteTemplate = () => {
     await dispatch(deleteTemplateThunk({ payload: { templateName: `${userType}_template` } }));
   };
 
-  //   const postTemplate = async fields => {
-  //     const payload = {
-  //       templateName: `${userType}_template`,
-  //       createdBy: 'admin',
-  //       fields: fields.map(f => ({ name: f.name, required: f.required })),
-  //     };
-
-  //     try {
-  //       await dispatch(editTemplateThunk({ payload }));
-  //     } catch (error) {
-  //       console.error('Error saving template:', error);
-  //     }
-  //   };
-
-  //   const handleGenerate = async () => {
-  //     const selectedFields = fields.filter(f => f.selected);
-
-  //     try {
-  //       await downloadExcel(selectedFields);
-  //       await postTemplate(selectedFields);
-  //     } catch (error) {
-  //       console.error('Generation failed:', error);
-  //     }
-  //   };
-
   return (
     <Grid container spacing={4} padding={4}>
       <AlertDialogComponent />
