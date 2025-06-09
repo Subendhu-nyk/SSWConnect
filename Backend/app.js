@@ -22,10 +22,12 @@ const userRoutes = require("./routes/userRoutes");
 const departmentRoutes = require ("./routes/departmentRoutes")
 const designationRoutes = require ("./routes/designationRoutes")
 const templateRoutes = require('./routes/templateRoutes');
+const attendanceRoutes=require('./routes/attendanceRoutes')
 
 app.use(userRoutes);
 app.use(departmentRoutes)
 app.use(designationRoutes)
+app.use(templateRoutes);
 app.use(templateRoutes);
 app.get("/", (req, res) => {
   res.send("University Dashboard API is running ");

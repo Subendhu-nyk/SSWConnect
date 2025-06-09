@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     designation: {
       type: DataTypes.STRING,
-      allowNull: false, 
+      allowNull: false,
     },
     user_id: {
       type: DataTypes.STRING,
@@ -24,11 +24,9 @@ module.exports = (sequelize, DataTypes) => {
 
   TeacherProfile.associate = (models) => {
     TeacherProfile.belongsTo(models.User, {
-      foreignKey: {
-        name: "user_id",
-        allowNull: false,
-      },
+      foreignKey: "user_id",
       targetKey: "user_id",
+      as: "User",
     });
   };
 

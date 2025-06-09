@@ -22,6 +22,7 @@ db.UserDocuments = require('./userProfile/userDocuments')(sequelize, Sequelize.D
 db.Department=require('./department/department')(sequelize, Sequelize.DataTypes);
 db.Designation = require('./designation/designation')(sequelize, Sequelize.DataTypes);
 db.Template = require('./template/template')(sequelize, Sequelize.DataTypes);
+db.Attendance = require('./attendance/attendance')(sequelize, Sequelize.DataTypes);
 
 // For academic structure
 // db.Department = require('./Department')(sequelize, Sequelize.DataTypes);

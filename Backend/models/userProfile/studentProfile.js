@@ -24,21 +24,18 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.TEXT,
       allowNull: true,
     },
-    user_id: { // defines FK column directly
+    user_id: {
+      // defines FK column directly
       type: DataTypes.STRING,
       allowNull: false,
     },
   });
 
   StudentProfile.associate = (models) => {
-    console.log("models----",models.User)
-     // This adds user_id FK to StudentProfile and links it to User.user_id
     StudentProfile.belongsTo(models.User, {
-      foreignKey: {
-        name: "user_id",
-        allowNull: false,
-      },
-      targetKey: "user_id", // this assumes we're linking to User.user_id
+      foreignKey: "user_id",
+      targetKey: "user_id",
+      as: "User",
     });
   };
 

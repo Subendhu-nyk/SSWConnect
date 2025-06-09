@@ -20,11 +20,9 @@ module.exports = (sequelize, DataTypes) => {
 
   StaffProfile.associate = (models) => {
     StaffProfile.belongsTo(models.User, {
-      foreignKey: {
-        name: "user_id",
-        allowNull: false,
-      },
+      foreignKey: "user_id",
       targetKey: "user_id",
+      as: "User",
     });
   };
 
