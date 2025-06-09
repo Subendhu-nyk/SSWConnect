@@ -583,12 +583,17 @@ const userLogin = async (req, res) => {
 const getStudentsByFilters = async (req, res) => {
   try {
     console.log("attendance data", req.body);
-    const { department, year, section } = req.body;
+    const { department, year, section, role } = req.body;
 
     if (!department || !year) {
       return res.status(400).json({ message: "Missing required filters" });
     }
-
+     const roleProfileMap = {
+      Student: "StudentProfile",
+      Teacher: "TeacherProfile",
+      Staff: "StaffProfile",
+    };
+    const profileAlias = roleProfileMap[role];
     const students = await User.findAll({
       where: {
         department,
@@ -598,8 +603,10 @@ const getStudentsByFilters = async (req, res) => {
       include: [
         {
           model: StudentProfile,
+          as: profileAlias,
           where: { year, section },
           attributes: { exclude: ["id", "createdAt", "updatedAt"] },
+          required: false,
         },
       ],
       attributes: {
@@ -608,7 +615,8 @@ const getStudentsByFilters = async (req, res) => {
     });
 
     const response = students.map((student) => {
-      const profile = student.StudentProfile || {};
+      const profile = student.StudentProfile || {};    
+      console.log("profile",profile)
       return {
         userId: student.user_id,
         name: `${student.firstName}`,
@@ -616,11 +624,11 @@ const getStudentsByFilters = async (req, res) => {
         gender: student.gender,
         department: student.department,
         year: profile.year,
-        section: profile.section,        
+        section: profile.section,
+        role:student.roles        
       };
     });
 
-    console.log("response>>>>", response);
     return res.status(200).json(response);
   } catch (error) {
     console.error("Error fetching students:", error);

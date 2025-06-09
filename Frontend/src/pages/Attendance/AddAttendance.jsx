@@ -27,20 +27,19 @@ import { generateInitialValues } from '../../config/generateInitialValues';
 import generateValidationSchema from '../../utils/validation/generateValidationSchema';
 import CommonTextFields from '../../common/TextFields/CommonTextFields';
 import { Form, Formik } from 'formik';
-import { getDepartmentThunk } from '../../features/ManagementReducer/hrmManagementThunk';
 import * as Yup from 'yup'; // NEW: Added Yup for second form validation
 import { getUserThunk } from '../../features/UserManagement/userManagementThunk';
 import { buildPayloadByRole } from '../../utils/commonFunction/commonFunction';
 
 function AddAttendance() {
   const dispatch = useDispatch();
-  const [students, setStudents] = useState([
-    { id: 'CSE101', name: 'Alice Johnson', status: '', remarks: '' },
-    { id: 'CSE102', name: 'Bob Smith', status: '', remarks: '' },
-  ]);
+  const [students, setStudents] = useState([]);
   const [feedback, setFeedback] = useState({ open: false, message: '', severity: 'success' });
   const [selectedRole, setSelectedRole] = useState('');
+  const [attendanceDate, setAttendanceDate] = useState('');
   const departmentData = useSelector(state => state?.hrmManagement?.getDepartmentData);
+  const userData = useSelector(state => state?.userManagement?.getUserDetails);
+  console.log(('student data', userData));
   const formType = 'attendanceForm';
   // const config = accordionConfig[formType];
   const [dynamicConfig, setDynamicConfig] = useState(accordionConfig[formType] || []);
@@ -142,8 +141,8 @@ function AddAttendance() {
                       maxLength={field.maxLength ? parseInt(field.maxLength) : undefined}
                       options={field.options || []}
                       onChange={value => {
-                        if (field.name === 'roles') {
-                          setSelectedRole(value); // ✅ Update role state
+                        if (field.name === 'role') {
+                          setSelectedRole(value); // Update role state
                         }
                       }}
                     />
@@ -165,17 +164,11 @@ function AddAttendance() {
   // NEW: Handle top form submission to fetch students and show second form
   const handleTopFormSubmit = async (values, actions) => {
     try {
-      // Simulate fetching students based on form values (replace with actual API call)
-      // Example API call: const response = await axios.post('/get-students', values);
-      
       const payload = buildPayloadByRole(selectedRole, values);
-      const response = dispatch(getUserThunk({ payload}));
-      console.log("response",response)
+      console.log('payload', payload);
+      await dispatch(getUserThunk({ payload })).unwrap();
+      setAttendanceDate(values.date);
       setTopFormValues(values); // Store form values
-      setStudents([
-        { id: 'CSE101', name: 'Alice Johnson', status: '', remarks: '' },
-        { id: 'CSE102', name: 'Bob Smith', status: '', remarks: '' },
-      ]); // Update with actual student data from API if needed
       setShowSecondForm(true); // Show the second form
       setFeedback({
         open: true,
@@ -188,6 +181,23 @@ function AddAttendance() {
     }
     actions.setSubmitting(false);
   };
+
+  useEffect(() => {
+    if (!userData || !Array.isArray(userData)) return;
+
+    const formatted = userData.map(user => ({
+      id: user.userId,
+      name: user.name,
+      role: user.role,
+      department: 'CSE',
+      year: '1st Year',
+      section: 'A',
+      status: '',
+      remarks: '',
+    }));
+
+    setStudents(formatted);
+  }, [userData]);
 
   // NEW: Validation schema for second form
   const secondFormValidationSchema = Yup.object().shape(
@@ -220,12 +230,20 @@ function AddAttendance() {
 
   // NEW: Handle second form submission
   const handleSecondFormSubmit = (values, actions) => {
-    const attendanceData = students.map(student => ({
-      id: student.id,
-      status: values[`${student.id}_status`],
-      remarks: values[`${student.id}_remarks`],
-    }));
-    console.log('Attendance data:', attendanceData);
+    const attendanceData = students.map(student => {
+      console.log('student', student);
+      return {
+        user_id: student.id,
+        role: student.role,
+        department: student.department,
+        section: student.section,
+        year: student.year,
+        date: attendanceDate,
+        status: values[`${student.id}_status`],
+        remarks: values[`${student.id}_remarks`],
+      };
+    });
+    console.log('AttendanceData', attendanceData);
     // Replace with actual API call to save attendance
     setFeedback({ open: true, message: 'Attendance saved successfully!', severity: 'success' });
     actions.setSubmitting(false);
@@ -240,6 +258,7 @@ function AddAttendance() {
   // NEW: Handle second form cancel
   const handleSecondFormCancel = () => {
     setShowSecondForm(false);
+    setStudents([]);
     setStudents(students.map(student => ({ ...student, status: '', remarks: '' })));
   };
 
@@ -269,18 +288,20 @@ function AddAttendance() {
             </Typography>
             <Grid container spacing={2}>
               {renderAccordionContent(dynamicConfig, selectedRole)}
-              <Grid item xs={12} container justifyContent='flex-end' spacing={2}>
-                <Grid item>
-                  <Button variant='contained' color='primary' type='submit'>
-                    Submit
-                  </Button>
+              {!showSecondForm && (
+                <Grid item xs={12} container justifyContent='flex-end' spacing={2}>
+                  <Grid item>
+                    <Button variant='contained' color='primary' type='submit'>
+                      Submit
+                    </Button>
+                  </Grid>
+                  <Grid item>
+                    <Button variant='outlined' color='error' onClick={() => resetForm()}>
+                      Cancel
+                    </Button>
+                  </Grid>
                 </Grid>
-                <Grid item>
-                  <Button variant='outlined' color='error' onClick={() => resetForm()}>
-                    Cancel
-                  </Button>
-                </Grid>
-              </Grid>
+              )}
             </Grid>
           </Form>
         )}
@@ -291,7 +312,12 @@ function AddAttendance() {
         <Formik
           initialValues={secondFormInitialValues}
           validationSchema={secondFormValidationSchema}
-          onSubmit={handleSecondFormSubmit}
+          onSubmit={(values, actions) => {
+            console.log('error', actions.error);
+            console.log('inside submit', values);
+            handleSecondFormSubmit(values, actions);
+            // when Submit is clicked, Formik will call this with current form values + helpers like resetForm
+          }}
           enableReinitialize
         >
           {({ setFieldValue, resetForm, errors, touched }) => (
@@ -308,8 +334,9 @@ function AddAttendance() {
                 <Table stickyHeader>
                   <TableHead>
                     <TableRow>
-                      <TableCell>Student ID</TableCell>
-                      <TableCell>Student Name</TableCell>
+                      <TableCell>User ID</TableCell>
+                      <TableCell>User Name</TableCell>
+                      <TableCell>User Role</TableCell>
                       <TableCell>Attendance Status</TableCell>
                       <TableCell>Remarks</TableCell>
                     </TableRow>
@@ -319,6 +346,7 @@ function AddAttendance() {
                       <TableRow key={student.id}>
                         <TableCell>{student.id}</TableCell>
                         <TableCell>{student.name}</TableCell>
+                        <TableCell>{student.role}</TableCell>
                         <TableCell>
                           <CommonTextFields
                             type='dropdown'
@@ -327,10 +355,9 @@ function AddAttendance() {
                             placeholder='Select Status'
                             required={true}
                             options={[
-                              { label: 'Select', value: '' },
                               { label: 'Present', value: 'Present' },
                               { label: 'Absent', value: 'Absent' },
-                              { label: 'Late', value: 'Late' },
+                              { label: 'Leave', value: 'Leave' },
                             ]}
                             error={
                               touched[`${student.id}_status`] && !!errors[`${student.id}_status`]
@@ -359,7 +386,7 @@ function AddAttendance() {
                   </TableBody>
                 </Table>
               </TableContainer>
-              <Grid container spacing={2} sx={{ mt: 2 }} justifyContent='flex-end'>
+              <Grid container spacing={2} sx={{ mt: 1 }} justifyContent='flex-end'>
                 <Grid item>
                   <Button variant='contained' color='primary' type='submit'>
                     Submit

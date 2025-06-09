@@ -1,6 +1,5 @@
-
 module.exports = (sequelize, DataTypes) => {
-  const UserProfile = sequelize.define('user', {
+  const UserProfile = sequelize.define("user", {
     id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
@@ -43,7 +42,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
     phoneNumber: {
-      type: DataTypes.STRING, 
+      type: DataTypes.STRING,
       allowNull: false,
     },
     password: {
@@ -71,7 +70,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true,
     },
     pinCode: {
-      type: DataTypes.STRING, 
+      type: DataTypes.STRING,
       allowNull: false,
     },
     department: {
@@ -79,7 +78,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true,
     },
     roles: {
-      type: DataTypes.ENUM('Admin', 'Student', 'Teacher', 'Staff'),
+      type: DataTypes.ENUM("Admin", "Student", "Teacher", "Staff"),
       allowNull: false,
     },
     isActive: {
@@ -91,9 +90,21 @@ module.exports = (sequelize, DataTypes) => {
 
   // 💡 Define associations to other models here
   UserProfile.associate = (models) => {
-    UserProfile.hasOne(models.StudentProfile);
-    UserProfile.hasOne(models.TeacherProfile);
-    UserProfile.hasOne(models.StaffProfile);    
+    UserProfile.hasOne(models.StudentProfile, {
+      foreignKey: "user_id",
+      sourceKey: "user_id",
+      as: "StudentProfile", // important!
+    });
+    UserProfile.hasOne(models.TeacherProfile, {
+      foreignKey: "user_id",
+      sourceKey: "user_id",
+      as: "TeacherProfile",
+    });
+    UserProfile.hasOne(models.StaffProfile, {
+      foreignKey: "user_id",
+      sourceKey: "user_id",
+      as: "StaffProfile",
+    });
   };
   return UserProfile;
 };

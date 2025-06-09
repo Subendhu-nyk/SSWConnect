@@ -109,15 +109,6 @@ const CommonTextFields = ({
       </Typography>
     );
 
-  // Helper function to render an error message if the field has been touched and has an error
-  // const isError = meta => (
-  //   meta.touched && meta.error && ( // Only show if the field is touched and has an error
-  //     <Typography variant="caption" color="error" sx={{ display: 'flex', ml: 2, mt: 0.5 }}>
-  //       {meta.error} {/* Display the error message */}
-  //     </Typography>
-  //   )
-  // );
-
   // Function to render the appropriate field based on the type prop
   const renderField = () => {
     // Use a switch statement to handle different field types

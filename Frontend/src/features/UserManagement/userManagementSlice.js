@@ -38,7 +38,7 @@ const userManagementSlice = createSlice({
         state.loading.addBulkUsersLoading = false;
         state.addBulkUsersData = action.payload.data;
       })
-      .addCase(getUserThunk.rejected, (state, action) => {
+      .addCase(addBulkUsersThunk.rejected, (state, action) => {
         state.loading.addBulkUsersLoading = false;
         state.error = action.payload;
       })
@@ -48,9 +48,9 @@ const userManagementSlice = createSlice({
       })
       .addCase(getUserThunk.fulfilled, (state, action) => {
         state.loading.getUserDetailsLoading = false;
-        state.getUserDetails = action.payload.data;
+        state.getUserDetails = action.payload;
       })
-      .addCase(addBulkUsersThunk.rejected, (state, action) => {
+      .addCase(getUserThunk.rejected, (state, action) => {
         state.loading.getUserDetailsLoading = false;
         state.error = action.payload;
       });
