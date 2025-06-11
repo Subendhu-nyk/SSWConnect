@@ -28,7 +28,7 @@ app.use(userRoutes);
 app.use(departmentRoutes)
 app.use(designationRoutes)
 app.use(templateRoutes);
-app.use(templateRoutes);
+app.use(attendanceRoutes);
 app.get("/", (req, res) => {
   res.send("University Dashboard API is running ");
 });

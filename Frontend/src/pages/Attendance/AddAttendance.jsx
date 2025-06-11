@@ -21,6 +21,8 @@ import {
   AccordionDetails,
 } from '@mui/material';
 import { ExpandMoreOutlined } from '@mui/icons-material';
+import ExcelJS from 'exceljs';
+import { saveAs } from 'file-saver';
 import { useDispatch, useSelector } from 'react-redux';
 import { accordionConfig } from '../../config/AccordionConfig/accordionConfig';
 import { generateInitialValues } from '../../config/generateInitialValues';
@@ -29,7 +31,10 @@ import CommonTextFields from '../../common/TextFields/CommonTextFields';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup'; // NEW: Added Yup for second form validation
 import { getUserThunk } from '../../features/UserManagement/userManagementThunk';
-import { buildPayloadByRole } from '../../utils/commonFunction/commonFunction';
+import { buildPayloadByRole, handleExcelUpload } from '../../utils/commonFunction/commonFunction';
+import { addAttendanceThunk } from '../../features/ManagementReducer/attendanceManagementThunk';
+import CommonFilter from '../../common/CommonFilter/CommonFilter';
+import { AttendanceDetailFields } from '../../config/FormFieldConfig/AttendanceFieldConfig/attendanceDetailFields';
 
 function AddAttendance() {
   const dispatch = useDispatch();
@@ -67,49 +72,6 @@ function AddAttendance() {
       }))
     );
   }, [departmentData]);
-
-  // const renderAccordionContent = config => {
-  //   if (!config || !Array.isArray(config) || config.length === 0) {
-  //     return null;
-  //   }
-
-  //   // Map directly over config (array of sections)
-  //   return config.map(section => (
-  //     <Grid item xs={12} key={section.sectionName}>
-  //       <Accordion defaultExpanded>
-  //         <AccordionSummary
-  //           expandIcon={<ExpandMoreOutlined />}
-  //           aria-controls={`${section.sectionName}-content`}
-  //           id={`${section.sectionName}-header`}
-  //           sx={{
-  //             backgroundColor: '#f5f5f5',
-  //             borderRadius: 0.5,
-  //           }}
-  //         >
-  //           <Typography variant='h6'>{section.sectionName}</Typography>
-  //         </AccordionSummary>
-  //         <AccordionDetails>
-  //           <Grid container spacing={2}>
-  //             {section.fields.map(field => (
-  //               <Grid item xs={12} sm={6} key={field.name}>
-  //                 <CommonTextFields
-  //                   type={field.type}
-  //                   name={field.name}
-  //                   label={field.label}
-  //                   placeholder={field.placeholder}
-  //                   required={field.required}
-  //                   maxLength={field.maxLength ? parseInt(field.maxLength) : undefined}
-  //                   options={field.options || []}
-  //                   onChange={value => console.log(`${field.name} changed:`, value)}
-  //                 />
-  //               </Grid>
-  //             ))}
-  //           </Grid>
-  //         </AccordionDetails>
-  //       </Accordion>
-  //     </Grid>
-  //   ));
-  // };
 
   // Updated renderAccordionContent to conditionally render fields by role
   const renderAccordionContent = (config, selectedRole) => {
@@ -155,17 +117,10 @@ function AddAttendance() {
     ));
   };
 
-  // const handleSubmit = (values, actions) => {
-  //   console.log('Form values:', values);
-  //   setFeedback({ open: true, message: 'Attendance saved successfully!', severity: 'success' });
-  //   actions.setSubmitting(false);
-  // };
-
   // NEW: Handle top form submission to fetch students and show second form
-  const handleTopFormSubmit = async (values, actions) => {
+  const handleTopFormSubmit = async (values, actions, { resetForm }) => {
     try {
       const payload = buildPayloadByRole(selectedRole, values);
-      console.log('payload', payload);
       await dispatch(getUserThunk({ payload })).unwrap();
       setAttendanceDate(values.date);
       setTopFormValues(values); // Store form values
@@ -180,6 +135,7 @@ function AddAttendance() {
       setFeedback({ open: true, message: 'Failed to load students', severity: 'error' });
     }
     actions.setSubmitting(false);
+    resetForm();
   };
 
   useEffect(() => {
@@ -229,9 +185,8 @@ function AddAttendance() {
   };
 
   // NEW: Handle second form submission
-  const handleSecondFormSubmit = (values, actions) => {
+  const handleSecondFormSubmit = async (values, actions) => {
     const attendanceData = students.map(student => {
-      console.log('student', student);
       return {
         user_id: student.id,
         role: student.role,
@@ -243,7 +198,7 @@ function AddAttendance() {
         remarks: values[`${student.id}_remarks`],
       };
     });
-    console.log('AttendanceData', attendanceData);
+    await dispatch(addAttendanceThunk({ payload: attendanceData }));
     // Replace with actual API call to save attendance
     setFeedback({ open: true, message: 'Attendance saved successfully!', severity: 'success' });
     actions.setSubmitting(false);
@@ -267,8 +222,91 @@ function AddAttendance() {
     setFeedback({ ...feedback, open: false });
   };
 
+  const handleAttendanceExcelUpload = () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.xlsx, .xls';
+
+    input.onchange = async e => {
+      const file = e.target.files[0];
+      if (!file) return;
+      await handleExcelUpload(
+        file,
+        data => dispatch(addAttendanceThunk({ payload: data })), // your bulk attendance thunk
+        () => console.log('Attendance upload successful!'),
+        error => console.log(`Attendance upload failed: ${error.message}`)
+      );
+    };
+
+    input.click();
+  };
+
+  const onDownloadAttendanceTemplate = async () => {
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('Attendance Template');
+
+    // Add header row
+    const headerRow = worksheet.getRow(1);
+    AttendanceDetailFields.forEach((field, index) => {
+      const cell = headerRow.getCell(index + 1);
+      cell.value = field.name;
+      cell.font = {
+        color: field.required ? { argb: 'FFFF0000' } : { argb: 'FF000000' },
+        bold: true,
+      };
+      worksheet.getColumn(index + 1).width = Math.max(field.name.length + 5, 20);
+    });
+    headerRow.commit();
+
+    // Add dropdown validation (first 1000 rows)
+    AttendanceDetailFields.forEach((field, colIdx) => {
+      if (
+        (field.type === 'dropdown' || field.type === 'multiselect') &&
+        Array.isArray(field.options) &&
+        field.options.length > 0
+      ) {
+        const list = field.options.map(opt => opt.label).join(',');
+        for (let row = 2; row <= 1000; row++) {
+          worksheet.getCell(row, colIdx + 1).dataValidation = {
+            type: 'list',
+            allowBlank: !field.required,
+            formulae: [`"${list}"`],
+            showErrorMessage: true,
+            errorStyle: 'warning',
+            errorTitle: 'Invalid Input',
+            error: 'Please select a value from the dropdown list.',
+          };
+        }
+      }
+    });
+
+    // Create Excel buffer and download
+    const buffer = await workbook.xlsx.writeBuffer();
+    const blob = new Blob([buffer], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    });
+    saveAs(blob, 'AttendanceTemplate.xlsx');
+  };
+
   return (
     <>
+      <CommonFilter
+        title='Add Attendance'
+        onSearch={false}
+        showSearch={false}
+        showAdd={true}
+        showImport={true}
+        showDownloadTemplate={true}
+        showRefresh={true}
+        showRecycleBin={true}
+        onAdd={() => console.log('Add new')}
+        onImport={handleAttendanceExcelUpload}
+        onExport={() => console.log('Export')}
+        onDownloadTemplate={onDownloadAttendanceTemplate}
+        onRefresh={() => console.log('Refresh')}
+        onRecycleBin={() => console.log('To recycle bin')}
+        onPrint={() => window.print()}
+      />
       {/* Top Form */}
       <Formik
         initialValues={initialValues}
@@ -283,9 +321,6 @@ function AddAttendance() {
       >
         {({ resetForm }) => (
           <Form>
-            <Typography variant='h6' gutterBottom>
-              Add Attendance
-            </Typography>
             <Grid container spacing={2}>
               {renderAccordionContent(dynamicConfig, selectedRole)}
               {!showSecondForm && (

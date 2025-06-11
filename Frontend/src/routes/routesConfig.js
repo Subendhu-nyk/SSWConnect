@@ -12,6 +12,7 @@ const AddTemplate = lazy(() => import('../pages/Template/AddTemplate'));
 const EditTemplate = lazy(() => import('../pages/Template/EditTemplate'));
 const DeleteTemplate = lazy(() => import('../pages/Template/DeleteTemplate'));
 const AddAttendance = lazy(() => import('../pages/Attendance/AddAttendance'));
+const ViewAttendance = lazy(() => import('../pages/Attendance/ViewAttendance'));
 
 const routesConfig = [
   {
@@ -107,6 +108,11 @@ const routesConfig = [
    {
     path: '/add/attendance',
     component: AddAttendance,
+    requiredRole: ['admin', 'teacher', 'staff'],
+  },
+   {
+    path: '/all/attendance',
+    component: ViewAttendance,
     requiredRole: ['admin', 'teacher', 'staff'],
   },
   
