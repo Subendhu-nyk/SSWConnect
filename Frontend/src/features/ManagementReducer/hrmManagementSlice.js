@@ -30,17 +30,14 @@ const hrmManagementSlice = createSlice({
         state.error = action.payload;
       })
       .addCase(getDepartmentThunk.pending, state => {
-         console.log("pending")
         state.loading.getDepartmentLoading = true;
         state.error = null;
       })
       .addCase(getDepartmentThunk.fulfilled, (state, action) => {
-        console.log("fulfilled",action.payload.data)
         state.loading.getDepartmentLoading = false;
         state.getDepartmentData = action.payload.data;
       })
       .addCase(getDepartmentThunk.rejected, (state, action) => {
-         console.log("rejected",action.payload.data)
         state.loading.getDepartmentLoading = false;
         state.error = action.payload;
       })

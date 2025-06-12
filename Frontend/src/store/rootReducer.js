@@ -10,6 +10,8 @@ import AuthReducer from '../features/AuthReducer/authSlice.js';
 import userManagementReducer from '../features/UserManagement/userManagementSlice.js';
 import hrmManagementReducer from '../features/ManagementReducer/hrmManagementSlice.js';
 import templateReducer from '../features/TemplateReducer/templateSlice.js';
+import attendanceReducer from '../features/ManagementReducer/attendanceManagementSlice.js'
+
 // import DashboardReducer from '../features/DashboardSlice/DashboardSlice';
 // import TokenReducer from '../features/SystemConfigurationReducers/TokenReducer/tokenSlice';
 
@@ -31,6 +33,7 @@ const rootReducer = combineReducers({
   userManagement: userManagementReducer,
   hrmManagement: hrmManagementReducer,
   template: templateReducer,
+  attendanceManagement:attendanceReducer,
   //   dashboard: DashboardReducer,
   //   token: TokenReducer,
 });

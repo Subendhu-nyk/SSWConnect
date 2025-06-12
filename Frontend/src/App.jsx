@@ -16,13 +16,14 @@ const Config = () => {
   // const [isServerDown, setIsServerDown] = useState(false);
   // const [isInValiduser, setIsInvalidUser] = useState(false);
 
+  const isAuthenticated = useSelector(state => state?.auth?.isAuthenticated);
   const isDarkMode = useSelector(state => state.theme.darkMode);
 
   useEffect(() => {
-    dispatch(getDepartmentThunk({ payload: null }));
-  }, [dispatch]);
-
-  // const userDataa = useSelector(state => state.userManagement);
+    if (isAuthenticated) {
+      dispatch(getDepartmentThunk({ payload: null }));
+    }
+  }, [dispatch, isAuthenticated]);
 
   // Handle user logout due to inactivity
 
